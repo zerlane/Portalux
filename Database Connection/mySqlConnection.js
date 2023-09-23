@@ -27,7 +27,7 @@ connection.connect(function(error){
 
 
 app.get('/', function (req, res) {
-
+	//using simple html file to connect to
     res.sendFile('register.html', {root: __dirname})
 });
 
