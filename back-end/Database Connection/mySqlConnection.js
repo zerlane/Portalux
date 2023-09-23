@@ -1,6 +1,10 @@
 //download Xampp -> start Apache and MySql -> go to localhost/phpmyadmin-> create database 'registration' 
 //-> create table 'newusers' under this database and create fields 
 
+// https://www.w3schools.com/nodejs/nodejs_mysql.asp
+// This is the link that talks about connecting javascript and MySQL
+
+
 const express = require('express');
 const mysql = require('mysql');
 const app = express ();
