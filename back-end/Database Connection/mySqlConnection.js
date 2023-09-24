@@ -8,7 +8,10 @@
 const express = require('express');
 const mysql = require('mysql');
 const app = express ();
+var bodyParser = require('body-parser');
 
+
+//creating mySql connection
 const connection = mysql.createConnection({
 	host:'localhost',
 	port:3306,
@@ -28,27 +31,29 @@ connection.connect(function(error){
 	}
 });
 
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-	//using simple html file to connect to
-    res.sendFile('register.html', {root: __dirname})
+
+	res.sendFile('registerForm.html', {root: __dirname})
+
 });
 
-
-//connection to database is successfull but i am having trouble with actually inserting the data
 app.post('/submit', function(req, res) {
-    let name = req.body.name;
-    let email = req.body.password;
-    let password = req.body.email;
+	var name=req.body.name;
+	var password=req.body.password;
+  	var email=req.body.email;
+	
+	res.write('Data has been successully entered.');
+	
+	var sql = "INSERT INTO newusers (name, password, email) VALUES ('"+name+"', '"+password+"','"+email+"')";
 
-     const sql = `INSERT INTO newusers (name, password, email)
-       VALUES ('${name}','${password}', '${email}')`;
-         db.query(sql, (err, res)=> {
-        if (err) throw err
-        res.render('registration', { title: 'Data Daved', message: 'Data saved successfully' })
-    })
-    connection.end();
+	connection.query(sql, function (err, result) {
+        	if (err) throw err
+	});
+	res.end();
+	connection.end();
 });
 
 
