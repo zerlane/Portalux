@@ -4,22 +4,22 @@ const connection = mysql.createConnection({
 	port:3306,
 	user:'root',
 	password:'password',
-    database: 'registration'
+    	database: 'registration'
 });
 
 connection.connect(function(error){
 	if(error)
 	{
-		console.log('Cannot connect to database.');
+		console.log('Connection Unsuccessful.');
 	}
 	else{
-		console.log('Connection to database successful.');
+		console.log('Connection Successful.');
 	}
 
     var sql = "SELECT * from newusers";
 
-    connection.query(sql, function (err, result) {
-        if (err) throw err
+    connection.query(sql, function (error, result) {
+        if (error) throw error
 		console.log(result);
     });
 });
