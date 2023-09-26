@@ -10,9 +10,17 @@ const connection = mysql.createConnection({
 connection.connect(function(error){
 	if(error)
 	{
-		console.log('Cannot connect to database.');
+		console.log('Connection Unsuccessful.');
 	}
 	else{
-		console.log('Connection to database successful.');
+		console.log('Connection Successful.');
+
 	}
 });
+
+connection.query("CREATE DATABASE registration", function (error, result) {
+if (error) throw error;
+    console.log("Database created");
+});
+
+connection.end();
