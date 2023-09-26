@@ -19,8 +19,8 @@ connection.connect(function(error){
 });
 
 connection.query("CREATE DATABASE registration", function (error, result) {
-if (error) throw error;
-    console.log("Database created");
+	if (error) throw error;
+    		console.log("Database created");
 });
 
 connection.end();
