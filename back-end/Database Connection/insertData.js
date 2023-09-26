@@ -1,6 +1,3 @@
-//download Xampp -> start Apache and MySql -> go to localhost/phpmyadmin-> create database 'registration' 
-//-> create table 'newusers' under this database and create fields 
-
 // https://www.w3schools.com/nodejs/nodejs_mysql.asp
 // This is the link that talks about connecting javascript and MySQL
 
@@ -24,15 +21,14 @@ const connection = mysql.createConnection({
 connection.connect(function(error){
 	if(error)
 	{
-		console.log('Cannot connect to database.');
+		console.log('Connection Unsuccessful.');
 	}
 	else{
-		console.log('Connection to database successful.');
+		console.log('Connection Successful.');
 	}
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 
@@ -45,12 +41,12 @@ app.post('/submit', function(req, res) {
 	var password=req.body.password;
   	var email=req.body.email;
 	
-	res.write('Data has been successully entered.');
-	
 	var sql = "INSERT INTO newusers (name, password, email) VALUES ('"+name+"', '"+password+"','"+email+"')";
 
-	connection.query(sql, function (err, result) {
-        	if (err) throw err
+	res.write('Data has been successully entered.');
+
+	connection.query(sql, function (error, result) {
+        	if (error) throw errow
 	});
 	res.end();
 	connection.end();
