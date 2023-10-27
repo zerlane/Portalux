@@ -1,3 +1,8 @@
+//install dependencies
+
+//npm i express mysql ejs nodemon bcrypt
+
+
 const mysql = require('mysql');
 const express = require('express');
 const app = express();
