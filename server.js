@@ -1,14 +1,33 @@
 //install dependencies
 
-//npm i express mysql ejs nodemon bcrypt
+//npm i express mysql ejs nodemon bcrypt express-session
 
 
 const mysql = require('mysql');
 const express = require('express');
 const app = express();
 const path = require('path');
-const ejs = require('ejs');
 const bcrypt = require('bcrypt');
+const session = require('express-session');
+
+
+
+
+
+// Set up session middleware
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
+//parsing requests
+app.use(express.urlencoded({ extended: false}));
+//path to public directory
+const location = path.join(__dirname, "./public");
+//serves static files in public folder
+app.use(express.static(location));
+//setting view engine
+app.set('view engine', 'ejs');
 
 //creating connection 
 const connection = mysql.createConnection({
@@ -53,13 +72,7 @@ connection.connect(function(error){
     
 });
 
-//middleware to parse data
-app.use(express.urlencoded({ extended: false }));
-//css files stored in public folder
-const location = path.join(__dirname, "./public");
-app.use(express.static(location));
-//setting view engine
-app.set('view engine', 'ejs');
+
 
 
 //routes
@@ -76,9 +89,19 @@ app.get('/login', (req, res) => {
 });
 
 
+app.get('/profile', (req, res) => {
+    // Retrieve the user data from the session
+    const user = req.session.user;
+
+    // Render the profile page with the retrieved user data
+    res.render('profile', { user: user });
+});
+
+
 
 //post request for signuppage
 app.post('/signuppage', function (req, res) {
+    //retrieving data
     var fname =req.body.fname;
   	var lname = req.body.lname;
 	var dob = req.body.dob;
@@ -88,20 +111,21 @@ app.post('/signuppage', function (req, res) {
 	var gender = req.body.gender;
     var password = req.body.password;
 
+    //selecting email from database 
     connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
         if(error){
             console.log(error);
         }
         //checking if email already exists in database
         if(result.length>0){
-            res.send('Email already exists.');
-            //code to display msg on page goes here
+            //displays error message if email already exists
+            return res.render('signuppage', { msg: 'Email already exists', msg_type: 'error' }  );
 
         }
         else{
             //hashing password using bcrypt and storing hashed password in database
             let hashedPassword = await bcrypt.hash(password, 8);
-            //inserting patient data in database
+            //storing patient data in database
 	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"')";
 
             //performs sql query and if no errors occur, user is redirected to the login page
@@ -122,10 +146,11 @@ app.post('/signuppage', function (req, res) {
 
 //post request for login page
 app.post('/login',  (req, res) =>{
+    //retrieving data
     var email = req.body.email;
     var pw = req.body.password;
 
-
+    //selecting all data from databse
     connection.query('SELECT * FROM bb_database.patients WHERE email=?', [email], async (error, result) => {
         if(error){
             console.log(error);
@@ -133,18 +158,18 @@ app.post('/login',  (req, res) =>{
         console.log(result);
         //checking if user exists
         if (result.length === 0) {
-            res.send('Email does not exist.');
-            //code to display msg on page goes here
+            //displaying error message if user is not found in database
+            return res.render('login', { msg: 'User does not exist.', msg_type: 'error' }  );
         }
         else{
             //cheching if given requested password matches the hashed password stored in database
             //redirects to profile page if password match
             if(!(await bcrypt.compare(pw, result[0].password))){
-                res.send('Password is incorrect');
+                return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
             }
             else{
-                res.send('This is the profile page.');
-                //res.redirect('/profile');
+                req.session.user = result[0];
+                res.redirect('/profile');
             }
         }
         
@@ -161,5 +186,12 @@ app.post('/login',  (req, res) =>{
 const port = 3000; 
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port localhost:${port}/welcome`);
 });
+
+
+
+
+
+//https://www.tutorjoes.in/blog/node_js#google_vignette
+//chatgpt
