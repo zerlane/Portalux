@@ -23,7 +23,16 @@
 
             <div class = "imageContainer">
 
-            
+                <div id="error-message" style="color: red; text-align: center;">
+                    <% if (typeof msg !== 'undefined' && msg_type === 'error') { %>
+                        <%= msg %>
+                    <% } %>
+                </div>
+                <div id="error-message" style="color: red; text-align: center;">
+                    <% if (typeof msg2 !== 'undefined' && msg_type === 'error') { %>
+                        <%= msg2 %>
+                    <% } %>
+                </div>
             <form action="/login" method="POST">
             <div class = "usernameBox">
                 <label for="email"> Email </label>
