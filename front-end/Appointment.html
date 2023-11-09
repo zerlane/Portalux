@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments</title>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('doctors-rafiki.png');
+  background-size: 30% auto; /* Adjust the percentage as needed */
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+
+
+        header {
+            background-color: #6f3371;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            border: 1px solid #fff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label, input, select {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #6f3371;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Appointment</h1>
+    </header>
+    <main>
+        <section id="appointment-form">
+            <h2>Schedule an appointment</h2>
+            <form id="appointment-form">
+                <label for="date">Date:</label>
+                <input type="date" id="date" required><br>
+                <input type="time" id="time" required><br>
+                <label for="doctor">Doctor:</label>
+                <select id="doctor" required>
+                    <option value="Dr. Smith">Dr. Smith</option>
+                    <option value="Dr. Johnson">Dr. Johnson</option>
+                </select><br>
+                <button type="submit">Appointment Scheduling</button>
+            </form>
+        </section>
+        <section id="appointment-list">
+            <h2>Your Appointments</h2>
+            <ul id="appointments">
+                <li>
+                    <button class="view-appointment">View</button>
+                    <button class="reschedule-appointment">Reschedule</button>
+                    <button class="cancel-appointment">Cancel</button>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const appointmentForm = document.getElementById('appointment-form');
+    const appointmentsList = document.getElementById('appointments');
+
+    appointmentForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Get user inputs (date, time, doctor) here
+        const dateInput = document.getElementById('date');
+        const timeInput = document.getElementById('time');
+        const doctorInput = document.getElementById('doctor');
+        
+        const date = dateInput.value;
+        const time = timeInput.value;
+        const doctor = doctorInput.value;
+
+        // Create a new appointment item
+const appointment = document.createElement('li');
+const appointmentContent = document.createElement('div');
+const appointmentButtons = document.createElement('div');
+const appointmentDateElement = document.createElement('span');
+const appointmentTimeElement = document.createElement('span');
+
+appointmentDateElement.textContent = `Date: ${date}`;
+appointmentTimeElement.textContent = `Time: ${time}`;
+
+appointmentContent.innerHTML = `<strong>Doctor:</strong> ${doctor}`;
+appointmentButtons.innerHTML = `
+    <button class="cancel-appointment">Cancel</button>
+    <button class="reschedule-appointment">Reschedule</button>
+    <button class="view-appointment">View</button>
+`;
+
+appointment.appendChild(appointmentContent);
+appointment.appendChild(appointmentButtons);
+appointmentContent.appendChild(appointmentDateElement);
+appointmentContent.appendChild(appointmentTimeElement);
+
+// Add some styling for better presentation
+appointment.style.border = '1px solid #ccc';
+appointment.style.padding = '10px';
+appointment.style.marginBottom = '10px';
+// Add styling for the highlighted words
+const highlightStyle = document.createElement('style');
+highlightStyle.innerHTML = `
+    .highlight {
+        color: #ff0000; /* You can choose any color you prefer */
+        font-weight: bold;
+    }
+`;
+document.head.appendChild(highlightStyle);
+
+        const cancelBtn = appointment.querySelector('.cancel-appointment');
+        cancelBtn.addEventListener('click', function () {
+            const confirmation = confirm('Please confirm to cancel the appointment');
+            if (confirmation) {
+                appointment.remove();
+                alert('Appointment canceled');
+            }
+        });
+        const viewBtn = appointment.querySelector('.view-appointment');
+viewBtn.addEventListener('click', function () {
+    alert(`Viewing appointment details:\nDate: ${date}\nTime: ${time}\nDoctor: ${doctor}`);
+});
+
+        const rescheduleBtn = appointment.querySelector('.reschedule-appointment');
+rescheduleBtn.addEventListener('click', function () {
+    const rescheduleForm = document.createElement('form');
+    const newDateInput = document.createElement('input');
+    newDateInput.type = 'date';
+    newDateInput.value = date;
+    newDateInput.required = true;
+
+    const newTimeInput = document.createElement('input');
+    newTimeInput.type = 'time';
+    newTimeInput.value = time;
+    newTimeInput.required = true;
+
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Reschedule';
+
+    rescheduleForm.appendChild(newDateInput);
+    rescheduleForm.appendChild(newTimeInput);
+    rescheduleForm.appendChild(submitButton);
+
+    rescheduleForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const newDate = newDateInput.value;
+        const newTime = newTimeInput.value;
+
+        dateInput.value = newDate;
+        timeInput.value = newTime;
+        appointmentDateElement.textContent = `Date: ${newDate}`;
+        appointmentTimeElement.textContent = `Time: ${newTime}`;
+
+        rescheduleForm.remove();
+        alert('Appointment rescheduled to ' + newDate + ' ' + newTime);
+    });
+
+    appointment.appendChild(rescheduleForm);
+});
+        appointmentsList.appendChild(appointment);
+
+        appointmentForm.reset();
+    });
+});
+
+
+
+    </script>
+</body>
+</html>
