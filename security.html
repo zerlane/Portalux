@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <title>New User Welcome</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    </head>
+    <style>
+
+        #title{
+            text-align: center;
+           
+        }
+
+
+        #entryinfo{
+            display:grid;
+            place-items: center;
+            
+        }
+
+        /* #background{
+            background-image: url("happypeople2.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            
+        } */
+
+        #loginsquare{
+
+            border-radius: 25px;
+            /* padding: 100px 0px;
+            margin-left: 100px;
+            margin-right: 100px; */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+           
+
+            text-align: center;
+            font-size: 20px;
+            
+
+            background-color: rgba(214, 210, 208, 0.39);
+            
+        }
+
+        #img1, #img2, #img3,  #img4,  #img5,  #img6,  #img7, #img8,  #img9,  #img10{
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        #submit{
+           
+           font-size: large;
+           font-family: 'Courier New', Courier, monospace;
+           background-color: #dcb7d9;
+           border-radius: 10px;
+           border-color: aliceblue;
+       }
+
+
+    </style>
+
+
+    <body id="background" style="background-color: aliceblue;" >
+
+        <div id="loginsquare">
+        <h1 id="title"style="font-family: 'Times New Roman',serif;"> Get Safe</h1>
+        
+        <div id="entryinfo" >
+
+        <form action="/submit-page2" method="POST">
+
+            <label for="pwd">Password:</label>
+            <input type="text" id="pwd" name="pwd" size="30">
+            <br><br>
+            <label for="cpwd">Confirm Password:</label>
+            <input type="password" id="cpwd" name="cpwd" size="30">
+            
+            <br>
+          
+       
+        <br><br>
+        <h4 style="font-family: 'Times New Roman',serif;"> Choose Your Second Authentication Image</h4>
+            <div id="images">
+            <img id="img1" src="imageauth/burger.jpg" data-value="1234" onclick="selectImage(this)">
+            <img id="img2" src="imageauth/brownpuppy.jpg" data-value = "5678" onclick="selectImage(this)">
+            <img id="img3" src="imageauth/catglasses.jpg" data-value = "9101" onclick="selectImage(this)">
+            <img id="img4" src="imageauth/gardenflower.jpg" data-value = "2131" onclick="selectImage(this)">
+            <img id="img5" src="imageauth/orangecat.jpg" data-value = "4151" onclick="selectImage(this)">
+            <img id="img6" src="imageauth/pinkcar.jpg" data-value = "6171" onclick="selectImage(this)">
+            <img id="img7" src="imageauth/pinkflower.jpg" data-value = "8192" onclick="selectImage(this)">
+            <img id="img8" src="imageauth/pugpuppy.jpg" data-value = "0212" onclick="selectImage(this)">
+            <img id="img9" src="imageauth/chromecar.jpeg" data-value = "2232" onclick="selectImage(this)">
+            <img id="img10" src="imageauth/yellowflower.jpg" data-value = "4252" onclick="selectImage(this)">
+            </div> 
+            
+
+            <input type="hidden" id="selectedimage" name="selectedimage">
+
+            <input type="hidden" id="imgpwd" name="imgpwd">
+            <br>
+        <button type="submit" id="submit" >Submit</button>
+        <br>
+
+       </form> 
+
+       <img src="portalux.png" style=" width:125px; height:100px;">
+        </div>
+        </div>
+      
+
+       
+    </body>
+
+    
+    <script>
+         function selectImage(img) {
+             // Get the data-value attribute of the clicked image
+             var value = img.getAttribute("data-value");
+  
+             // Set the value of the hidden input field with the ID "imgpwd"
+             document.getElementById("imgpwd").value = value;
+     }   
+
+    </script>
+
+    <script src="index3.js"></script>
+</html>
+
+<!-- file:///Users/zoegooden/Documents/csa499/security.html -->
+
+<!-- <a href="https://storyset.com/people">People illustrations by Storyset</a> -->
