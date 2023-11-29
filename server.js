@@ -15,10 +15,7 @@ const session = require('express-session');
 
 
 // Set up session middleware
-
-
 //needed for profile display
-
 app.use(session({
     secret: 'secret-key',
     resave: false,
@@ -32,6 +29,9 @@ const location = path.join(__dirname, "./public");
 app.use(express.static(location));
 //setting view engine
 app.set('view engine', 'ejs');
+
+
+
 
 //creating connection 
 const connection = mysql.createConnection({
@@ -78,10 +78,7 @@ connection.connect(function(error){
 
 
 
-
-
 //-------------------------------------------------------------------------get requests------------------------------------------------------------------------
-
 
 
 //routes
@@ -97,6 +94,10 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+app.get('/home', (req, res) =>{
+    res.render('home');
+})
+
 
 app.get('/profile', (req, res) => {
     // Retrieve the user data from the session
@@ -106,14 +107,11 @@ app.get('/profile', (req, res) => {
     res.render('profile', { user: user });
 });
 
+app.get('/Appointment', (req, res) => {
+    res.render('Appointment');
+})
 
 
-
-//post request for signuppage
-app.post('/signuppage', function (req, res) {
-    //retrieving data
-    var fname =req.body.fname;
-  	var lname = req.body.lname;
 
 
 //-----------------------------------------------------------------------------------------post requests----------------------------------------------------------------------------------------
@@ -126,12 +124,10 @@ app.post('/signuppage', function (req, res) {
 	var lname = req.body.lname;
 	var dob = req.body.dob;
 	var address = req.body.address;
-  var email = req.body.email;
+  	var email = req.body.email;
 	var phone = req.body.phone;
 	var gender = req.body.gender;
-  var password = req.body.password;
-  var password = req.body.password;
-
+    	var password = req.body.password;
 
     //selecting email from database 
     connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
@@ -191,14 +187,20 @@ app.post('/login',  (req, res) =>{
             }
             else{
                 req.session.user = result[0];
-                res.redirect('/profile');
+                res.redirect('/home');
             }
         }
         
     });
 });
 
+app.post('/profile',  (req, res) =>{
+    res.redirect('/profile');
+});
 
+app.post('/appoinments', (req, res) => {
+    res.redirect('/Appointment');
+})
 
 
 
