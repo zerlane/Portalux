@@ -1,14 +1,24 @@
+
 /* styles.css */
+
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+
     background-color: #f0f0f0;
+
+    background-color: aliceblue;
+
 }
 
 
 header {
+
     background-color: #dd7676; 
+
+    background-color: #8c67bda2; 
+
     color: #fff; 
     text-align: center;
     padding: 20px;
@@ -23,10 +33,14 @@ header {
 
 .button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 20px
     background-color: #4caf50; 
     color: #fff; 
     border: 2px solid #4caf50; 
+
+    background-color: #8c67bd; 
+    color: #fff; 
+    border: 2px solid #875fbb; 
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
@@ -39,14 +53,30 @@ header {
 .button:hover {
     background-color: #45a049; 
     border-color: #45a049; 
+    background-color: #4586a0; 
+    border-color: #9578e4; 
 }
 
 
 h1, h2 {
-    color: #1c7c39;
+  color: #1c7c39;
+    color: #8c67bd;
 }
 
 
 p {
+
     color: #e00808; 
 }
+    color: rgb(27, 27, 27); 
+}
+.container {
+    background-image: url(../STATIC/Doctors-pana.png);
+    background-size: cover;
+    background-blend-mode: color-burn;
+    
+}
+.words {
+    opacity: 100%;
+}
+

@@ -15,6 +15,10 @@ const session = require('express-session');
 
 
 // Set up session middleware
+
+
+//needed for profile display
+
 app.use(session({
     secret: 'secret-key',
     resave: false,
@@ -75,6 +79,11 @@ connection.connect(function(error){
 
 
 
+
+//-------------------------------------------------------------------------get requests------------------------------------------------------------------------
+
+
+
 //routes
 app.get('/welcome', (req, res) =>{
 	res.render("welcome");
@@ -99,17 +108,30 @@ app.get('/profile', (req, res) => {
 
 
 
+
 //post request for signuppage
 app.post('/signuppage', function (req, res) {
     //retrieving data
     var fname =req.body.fname;
   	var lname = req.body.lname;
+
+
+//-----------------------------------------------------------------------------------------post requests----------------------------------------------------------------------------------------
+
+
+//post request for signuppage
+app.post('/signuppage', function (req, res) {
+    	//retrieving data
+	var fname =req.body.fname;
+	var lname = req.body.lname;
 	var dob = req.body.dob;
 	var address = req.body.address;
-  	var email = req.body.email;
+  var email = req.body.email;
 	var phone = req.body.phone;
 	var gender = req.body.gender;
-    var password = req.body.password;
+  var password = req.body.password;
+  var password = req.body.password;
+
 
     //selecting email from database 
     connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
