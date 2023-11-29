@@ -128,6 +128,7 @@ app.post('/signuppage', function (req, res) {
 	var phone = req.body.phone;
 	var gender = req.body.gender;
     	var password = req.body.password;
+	//var imgpwd = req.body.imgpwd;
 
     //selecting email from database 
     connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
@@ -143,6 +144,7 @@ app.post('/signuppage', function (req, res) {
         else{
             //hashing password using bcrypt and storing hashed password in database
             let hashedPassword = await bcrypt.hash(password, 8);
+		//hash imgpwd here
             //storing patient data in database
 	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"')";
 
