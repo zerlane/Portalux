@@ -62,6 +62,7 @@ connection.connect(function(error){
     }
 
             //creating table
+	//add imgpwd, salt fields
             var sql = "CREATE TABLE IF NOT EXISTS bb_database.patients (id INT AUTO_INCREMENT PRIMARY KEY, fname CHAR(75) NOT NULL, lname CHAR(75) NOT NULL, dob DATE NOT NULL, address TEXT(150) NOT NULL, email VARCHAR(75) NOT NULL, phone VARCHAR(10) NOT NULL, gender CHAR(6) NOT NULL, password VARCHAR(60) NOT NULL)";
             connection.query(sql, function (error, result) {
                 if (error)
@@ -146,6 +147,7 @@ app.post('/signuppage', function (req, res) {
             let hashedPassword = await bcrypt.hash(password, 8);
 		//hash imgpwd here
             //storing patient data in database
+		//add imgpwd, salt field
 	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"')";
 
             //performs sql query and if no errors occur, user is redirected to the login page
@@ -183,6 +185,9 @@ app.post('/login',  (req, res) =>{
         }
         else{
             //cheching if given requested password matches the hashed password stored in database
+
+		//check that imgpwd also matches
+		
             //redirects to profile page if password match
             if(!(await bcrypt.compare(pw, result[0].password))){
                 return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
