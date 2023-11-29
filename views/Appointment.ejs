@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('doctors-rafiki.png');
+            background-size: 30% auto;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        header {
+            background-color: #6f3371;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            border: 1px solid #fff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label,
+        input,
+        select {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #6f3371;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .schedule-button,
+        .reschedule-button,
+        .cancel-button {
+            display: none;
+            background-color: #6f3371;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .reschedule-button,
+        .cancel-button {
+            background-color: #6f3371;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .action-buttons,
+        .your-appointment-buttons {
+            margin-top: 10px;
+        }
+
+        .highlight {
+            color: #ff0000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <header>
+        <h1>Appointment</h1>
+    </header>
+
+    <main>
+        <section id="appointment-form">
+            <h2>Schedule an appointment</h2>
+            <form id="appointment-form">
+                <label for="date">Date:</label>
+                <input type="date" id="date" >
+                <br>
+                <label for="doctor">Doctor:</label>
+                <select id="doctor">
+                    <option value="">Any Doctor</option>
+                    <option value="Dr. Smith">Dr. Smith</option>
+                    <option value="Dr. Johnson">Dr. Johnson</option>
+                </select>
+                <br>
+                <button type="submit">Check Availability</button>
+            </form>
+        </section>
+        <section id="available-appointments">
+            <h2>Available Appointments</h2>
+            <ul id="available-appointments-list">
+                
+            </ul>
+        </section>
+        <section id="appointment-list">
+            <h2>Your Appointments</h2>
+            <ul id="appointments">
+                
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const appointmentForm = document.getElementById('appointment-form');
+            const availableAppointmentsList = document.getElementById('available-appointments-list');
+            const scheduledAppointmentsList = document.getElementById('appointments');
+    
+            const dummyAvailableAppointments = [
+                { date: '2023-11-19', time: '10:00 AM', doctor: 'Dr. Smith' },
+                { date: '2023-11-19', time: '11:00 AM', doctor: 'Dr. Smith' },
+                { date: '2023-11-19', time: '2:00 PM', doctor: 'Dr. Johnson' },
+                { date: '2023-11-20', time: '4:00 PM', doctor: 'Dr. Smith' },
+               
+            ];
+    
+            appointmentForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const dateInput = document.getElementById('date');
+    const doctorInput = document.getElementById('doctor');
+
+    const date = dateInput.value;
+    const doctor = doctorInput.value;
+
+    const filteredAppointments = dummyAvailableAppointments.filter(appointment => {
+        const isDateMatch = !date || appointment.date === date;
+        const isDoctorMatch = !doctor || appointment.doctor === doctor;
+        return isDateMatch && isDoctorMatch;
+    });
+
+    displayAppointments(filteredAppointments, availableAppointmentsList);
+});
+
+function cancelAppointment(appointmentItem) {
+    // Set the canceled property to true
+    const appointment = getAppointmentDetails(appointmentItem);
+    appointment.canceled = true;
+    removeAppointment(appointmentItem);
+    alert('Appointment canceled');
+}
+
+
+function checkAvailability() {
+            const dateInput = document.getElementById('date');
+            const doctorInput = document.getElementById('doctor');
+
+            const date = dateInput.value;
+            const doctor = doctorInput.value;
+
+            // Filter available appointments based on date and doctor
+            const filteredAppointments = dummyAvailableAppointments.filter(appointment => {
+                const isDateMatch = !date || appointment.date === date;
+                const isDoctorMatch = !doctor || appointment.doctor === doctor;
+                return isDateMatch && isDoctorMatch;
+            });
+
+            // Filter out already scheduled appointments at the same time
+            const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
+                return appointmentItem.querySelector('[data-type="time"]').innerText;
+            });
+
+            const uniqueAvailableAppointments = filteredAppointments.filter(appointment => {
+                return !scheduledTimes.includes(appointment.time);
+            });
+
+            displayAppointments(uniqueAvailableAppointments, availableAppointmentsList);
+        }
+
+function displayAppointments(appointments, listElement) {
+    listElement.innerHTML = '';
+
+    if (appointments.length === 0) {
+        listElement.innerHTML = '<li>No appointments available.</li>';
+    } else {
+        appointments.forEach(appointment => {
+            const listItem = document.createElement('li');
+            const appointmentTime = appointment.time;
+            listItem.innerHTML = `Date: ${appointment.date}, Time: ${appointmentTime}, Doctor: ${appointment.doctor}
+                <button class="schedule-appointment">Schedule</button>`;
+
+            const scheduleBtn = listItem.querySelector('.schedule-appointment');
+            scheduleBtn.addEventListener('click', function () {
+                scheduleAppointment(appointment);
+            });
+
+            listElement.appendChild(listItem);
+        });
+    }
+}
+
+    
+            
+function scheduleAppointment(appointment) {
+
+    // This Check if the time slot is still available
+    const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
+                return appointmentItem.querySelector('[data-type="time"]').innerText;
+            });
+
+            if (scheduledTimes.includes(appointment.time)) {
+                alert('This appointment time is no longer available. Please choose another time.');
+                return;
+            }
+    
+    const appointmentItem = document.createElement('li');
+    appointmentItem.innerHTML = `<strong data-type="doctor">Doctor:</strong> ${appointment.doctor}, <strong data-type="date">Date:</strong> ${appointment.date}, <strong data-type="time">Time:</strong> ${appointment.time}
+        <button class="cancel-appointment">Cancel</button>
+        <button class="reschedule-appointment">Reschedule</button>
+        <button class="view-appointment">View</button>`;
+
+    appointmentItem.style.border = '1px solid #ccc';
+    appointmentItem.style.padding = '10px';
+    appointmentItem.style.marginBottom = '10px';
+
+    scheduledAppointmentsList.appendChild(appointmentItem);
+    
+    const cancelBtn = appointmentItem.querySelector('.cancel-appointment');
+    cancelBtn.addEventListener('click', function () {
+        const confirmation = confirm('Please confirm to cancel the appointment');
+        if (confirmation) {
+            removeAppointment(appointmentItem);
+            alert('Appointment canceled');
+        }
+    });
+
+    const viewBtn = appointmentItem.querySelector('.view-appointment');
+    viewBtn.addEventListener('click', function () {
+        alert(`Viewing appointment details:\nDate: ${appointment.date}\nTime: ${appointment.time}\nDoctor: ${appointment.doctor}`);
+    });
+
+    const rescheduleBtn = appointmentItem.querySelector('.reschedule-appointment');
+    rescheduleBtn.addEventListener('click', function () {
+        displayAvailableAppointmentsForReschedule(appointmentItem, appointment);
+    });
+
+    
+    availableAppointmentsList.innerHTML = '';
+}
+
+
+
+    
+function displayAvailableAppointmentsForReschedule(scheduledAppointmentItem, selectedAppointment) {
+    removeAppointment(scheduledAppointmentItem);
+
+    const filteredAppointments = dummyAvailableAppointments.filter(appointment =>
+        appointment.date === selectedAppointment.date && appointment.doctor === selectedAppointment.doctor &&
+        !appointment.canceled
+    );
+
+    // Filter out already scheduled appointments at the same time
+    const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
+        return appointmentItem.querySelector('[data-type="time"]').innerText;
+    });
+    const uniqueAvailableAppointments = filteredAppointments.filter(appointment => {
+        return !scheduledTimes.includes(appointment.time);
+    });
+
+    // Display available appointments for rescheduling
+    displayAppointments(uniqueAvailableAppointments, availableAppointmentsList);
+
+    scheduledAppointmentItem.querySelector('.reschedule-appointment').innerText = 'Select for Reschedule';
+
+    const rescheduleBtns = availableAppointmentsList.querySelectorAll('.schedule-appointment');
+    rescheduleBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const newDate = this.getAttribute('data-date');
+            const newTime = this.getAttribute('data-time');
+            const newDoctor = this.getAttribute('data-doctor');
+            removeAppointment(scheduledAppointmentItem);
+            const selectedAppointment = availableAppointmentsList.querySelector('.selected');
+            if (selectedAppointment) {
+                selectedAppointment.classList.remove('selected');
+            }
+            availableAppointmentsList.innerHTML = '';
+            scheduleAppointment({ date: newDate, time: newTime, doctor: newDoctor });
+            alert('Appointment rescheduled');
+        });
+    });
+}
+
+
+
+function updateScheduledAppointmentDetails(appointmentItem, newAppointment) {
+    const { date, time, doctor } = newAppointment;
+
+    appointmentItem.innerHTML = `<strong>Doctor:</strong> ${doctor}, <strong>Date:</strong> ${date}, <strong>Time:</strong> ${time}
+    <button class="cancel-appointment">Cancel</button>
+    <button class="reschedule-appointment">Reschedule</button>
+    <button class="view-appointment">View</button>`;
+}
+
+function removeAppointment(appointmentItem) {
+    scheduledAppointmentsList.removeChild(appointmentItem);
+}
+
+
+});
+
+</script>
+
+</body>
+
+</html>
