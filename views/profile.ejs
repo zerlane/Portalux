@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Portal - Home</title>
+    <title>Profile</title>
     <style>
         /* Reset some default styles */
         body, h1, h2, p {
@@ -12,50 +11,72 @@
             padding: 0;
         }
 
+
         /* Overall page style */
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
 
         /* Header style */
         header {
-            background-color: #b054c1;
+            background-color: #322636;
             color: #fff;
             text-align: center;
+            font-style: italic;
             padding: 20px 0;
             font-size: 28px;
+            background-image: url(../STATIC/Medical\ care-amico.png);
+            background-size: 90vw;
+            background-position-y: 20%;
+            text-shadow: 2px 2px 4px #000000;
+            background-blend-mode: soft-light;
         }
 
-        /* Navigation menu style */
+/* Navigation menu style */
         nav {
-            background-color: #333;
+            background-color: rgb(230, 232, 233);
             text-align: left;
-            padding: 20px;
+            padding: 1px;
+            box-shadow: 2px 2px 12px #a7a3a3;
+            opacity: 90%;
+
         }
 
         nav ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         nav li {
-            margin-bottom: 10px;
-            display: inline;
+
+            float: left;
+
         }
 
         nav a {
             text-decoration: none;
-            color: #fff;
+            color: #463f3f;
             font-size: 18px;
-            /* display: block; */
-            padding: 10px;
+            display: block;
+            font-family: sans-serif;
+            font-weight: bold;
+            padding: 15px;
             transition: background-color 0.3s;
+
+
         }
 
         nav a:hover {
-            background-color: #555;
+            background-color: aliceblue;
+
+
+        }
+
+        .nav_link {
+            background-color: aliceblue;
+            color: #000000;
         }
 
         /* Main content area style */
@@ -69,12 +90,16 @@
 
         /* Dashboard-style content */
         .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
             text-align: center;
             padding: 40px;
         }
 
         .dashboard-content h2 {
-            font-size: 36px;
+            font-size: 28px;
             color: #b054c1;
             margin-bottom: 20px;
         }
@@ -96,12 +121,16 @@
             margin-top: 20px;
             transition: background-color 0.3s;
         }
+
         /* Footer style */
         footer {
-            background-color: #333;
-            color: #fff;
+            background-color: rgb(221, 233, 243);
+            color: #463f3f;
+            font-weight: bold;
+            font-family:sans-serif;
             text-align: center;
             padding: 20px 0;
+            box-shadow:2px 2px 12px #a7a3a3;
         }
 
         .cta-button:hover {
@@ -109,9 +138,10 @@
         }
 
         .profileshow{
-            height:100px;
-            width:100px;
+            height:120px;
+            width:120px;
             border-radius: 50%; 
+            display: inline-block;
             
         }
 
@@ -128,30 +158,28 @@
 </head>
 <body>
     <header>
-        
-         <h1> Welcome to the Patient Portal</h1> 
+        <img src = "/STATIC/whiteLogoSmall.png" alt = "whiteLogo">
+        <br>
+        <img src = "/STATIC/motto-White.png" alt = "motto">
     </header>
     <nav>
-       
         <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/Appointment">Appointments</a></li>
+            <li><a href="/home" >Home</a></li>
+            <li><a href="/appointments">Appointments</a></li>
             <li><a href="/medicalHistory">Medical Records</a></li>
             <li><a href="/billing">Billing Process</a></li>
-            <li><a href="/profile">Profile</a></li>
-
+            <li><a href="/profile" class = "nav_link" data-link>Profile</a></li>
         </ul>
-       
     </nav>
+    
     <main>
         <div class="dashboard-content">
-            <div class="profileshow" style="background-color:#9f9f9f">
+            <div class="profileshow" style="background-color:#ebdede">
                <img src="/STATIC/profilepic.png">
-               <h3> <%= user.fname %></h3>
             </div>
-            <h1>Profile Information</h1>
-            <p>First Name: <%= user.fname %></p>
-            <p>Last Name: <%= user.lname %></p>
+            <h2 class="name"><%= user.first_name %> <%= user.last_name %></h2>
+            <p>First Name: <%= user.first_name %></p>
+            <p>Last Name: <%= user.last_name %></p>
             <p>Date of Birth: <%= user.dob %></p>
             <p>Address: <%= user.address %></p>
             <p>Email: <%= user.email %></p>

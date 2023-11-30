@@ -41,5 +41,21 @@ export const emailExists = async (email) => {
     }
 }
 
+export const getOnePatient = async (email) => {
+    try {
+        const [patient] = await pool.query(
+            `SELECT * FROM Patients WHERE email = ?`, 
+            [email]
+        )
+        if(patient.length === 0) {
+            return false
+        }
+        return patient
+    } catch (err) {
+        console.error(`Couldn't get patient with this email: ${err}`)
+    }
+}
+
+
 
 
