@@ -101,16 +101,54 @@
             <br><br>
             <label for="password">Password:</label>
             <input type="text" id="password" name="password" size="20" required>
+            <br>
+<h4 style="font-family: 'Times New Roman',serif;"> Choose Your Second Authentication Image</h4>
+            <div id="images">
+            <img id="img1" src="/STATIC/burger.jpg" data-value="1234" onclick="selectImage(this)">
+            <img id="img2" src="/STATIC/brownpuppy.jpg" data-value = "5678" onclick="selectImage(this)">
+            <img id="img3" src="/STATIC/catglasses.jpg" data-value = "9101" onclick="selectImage(this)">
+            <img id="img4" src="/STATIC/gardenflower.jpg" data-value = "2131" onclick="selectImage(this)">
+            <img id="img5" src="/STATIC/orangecat.jpg" data-value = "4151" onclick="selectImage(this)">
+            <img id="img6" src="/STATIC/pinkcar.jpg" data-value = "6171" onclick="selectImage(this)">
+            <img id="img7" src="/STATIC/pinkflower.jpg" data-value = "8192" onclick="selectImage(this)">
+            <img id="img8" src="/STATIC/pugpuppy.jpg" data-value = "0212" onclick="selectImage(this)">
+            <img id="img9" src="/STATIC/chromecar.jpeg" data-value = "2232" onclick="selectImage(this)">
+            <img id="img10" src="/STATIC/yellowflower.jpg" data-value = "4252" onclick="selectImage(this)">
+            </div> 
+
+            <input type="hidden" id="selectedimage" name="selectedimage">
+
+            <input type="hidden" id="imgpwd" name="imgpwd">
             <br><br>
             <button id="submit"> Submit</button>
         </form>
 
     </div>
         </div>
-        
-
        
     </body>
+<script>
+
+        let currentselect = null;
+
+         function selectImage(img) {
+             // Get the data-value attribute of the clicked image
+             var value = img.getAttribute("data-value");
+  
+             // Set the value of the hidden input field with the ID "imgpwd"
+             document.getElementById("imgpwd").value = value;
+
+             if(currentselect){
+                currentselect.classList.remove('active');
+             }
+
+             img.classList.add('active');
+
+             currentselect = img;
+
+     }   
+
+    </script>
 
     <!--<script src="index2.js"></script> -->
 </html>
