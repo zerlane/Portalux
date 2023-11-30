@@ -6,6 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments</title>
     <style>
+         
+        nav {
+            background-color:  rgb(230, 232, 233);
+            text-align: left;
+            padding: 1px;
+            box-shadow:2px 2px 12px #a7a3a3;
+            opacity:90%;
+            
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        nav li {
+            
+            float:left;
+            
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #463f3f;
+            font-size: 18px;
+            display: block;
+            font-family:sans-serif;
+            font-weight: bold;
+            padding: 15px;
+            transition: background-color 0.3s;
+            
+
+        }
+
+        nav a:hover {
+            background-color: aliceblue;
+        }
+        
+        .nav_link {
+            background-color: aliceblue;
+            color:#000000;
+            
+            
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -17,10 +63,11 @@
         }
 
         header {
-            background-color: #6f3371;
+            background-color: rgb(109, 75, 106);
             color: white;
-            text-align: center;
+            text-align: left;
             padding: 10px;
+            
         }
 
         main {
@@ -28,33 +75,54 @@
             margin: 20px auto;
             padding: 30px;
             border: 1px solid #fff;
+            
+            
+        }
+        .formCard {
+            border-radius: 25px;
+            padding: 50px 0px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
+            text-align: center;
+            font-size: larger;
+
+            background-color: rgba(214, 210, 208, 0.39);
+            
+        
+            margin: auto;
+            margin-top: 4%;
+            
+            min-width: 50%;
+            max-width: 80%;
+            height: 100%;
         }
 
         form {
             margin-bottom: 20px;
+            margin-left: 25px;
         }
 
         label,
         input,
         select {
-            display: block;
+            
             margin-bottom: 10px;
         }
 
         button {
-            background-color: #6f3371;
+            background-color: rgb(133, 1, 221);
             color: white;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
+        
         }
-
         ul {
             list-style: none;
             padding: 0;
         }
 
-        li {
+        section li {
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
@@ -64,6 +132,14 @@
         li:hover {
             background-color: #f0f0f0;
         }
+        button:hover {
+            background-color: rgb(40, 8, 61);
+            color: white;
+
+
+        
+            
+        }
 
         .schedule-button,
         .reschedule-button,
@@ -71,7 +147,7 @@
             display: none;
             background-color: #6f3371;
             color: white;
-            border: none;
+            border-radius: 3px;
             padding: 10px 20px;
             cursor: pointer;
         }
@@ -80,19 +156,51 @@
         .cancel-button {
             background-color: #6f3371;
             color: white;
-            border: none;
+            
             padding: 10px 20px;
             cursor: pointer;
+            border-radius: 3px;
         }
 
         .action-buttons,
         .your-appointment-buttons {
             margin-top: 10px;
+            border-radius: 3px;
         }
 
         .highlight {
             color: #ff0000;
             font-weight: bold;
+        }
+        footer {
+            background-color: rgb(221, 233, 243);
+            color: #463f3f;
+            font-weight: bold;
+            font-family:sans-serif;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow:2px 2px 12px #a7a3a3;
+        }
+        button {
+            border-radius: 100px;
+            font-size: medium;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #8c67bd;
+        }
+        h2 {
+            
+            margin-bottom: 20px;
+            font-size: 40px;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: lighter;
+            
+            color: #b054c1;
+            opacity: .70;
+            
+        }
+        h3 {
+            font-family:Arial, Helvetica, sans-serif;
         }
     </style>
 </head>
@@ -100,29 +208,43 @@
 <body>
     
     <header>
-        <h1>Appointment</h1>
+        <img src = "../STATIC/whiteLogosmall.png"  alt = "wordLogo" >
+        
     </header>
-
+    <nav>
+        <ul>
+            <li><a href="home.html" >Home</a></li>
+            <li><a href="appointments.html" class = "nav_link">Appointments</a></li>
+            <li><a href="medicalHistory.html" >Medical Records</a></li>
+            <li><a href="Prescription">Prescription</a></li>
+            <li><a href="profile.html">Profile</a></li>
+        </ul>
+    </nav>
     <main>
-        <section id="appointment-form">
-            <h2>Schedule an appointment</h2>
-            <form id="appointment-form">
-                <label for="date">Date:</label>
-                <input type="date" id="date" >
-                <br>
-                <label for="doctor">Doctor:</label>
-                <select id="doctor">
-                    <option value="">Any Doctor</option>
-                    <option value="Dr. Smith">Dr. Smith</option>
-                    <option value="Dr. Johnson">Dr. Johnson</option>
-                </select>
-                <br>
-                <button type="submit">Check Availability</button>
-            </form>
-        </section>
+        
+        <div class = "formCard">
+            <section id="appointment-form">
+                <h2>Schedule An Appointment</h2>
+                <form id="appointment-form">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" >
+                    <br>
+                    <label for="doctor">Doctor:</label>
+                    <select id="doctor">
+                        <option value="">Any Doctor</option>
+                        <option value="Dr. Smith">Dr. Smith</option>
+                        <option value="Dr. Johnson">Dr. Johnson</option>
+                    </select>
+                    <br>
+                    <br>
+                    <button type="submit">Check Availability</button>
+                </form>
+            </section>
+        </div>
         <section id="available-appointments">
             <h2>Available Appointments</h2>
             <ul id="available-appointments-list">
+                
                 
             </ul>
         </section>
@@ -133,6 +255,9 @@
             </ul>
         </section>
     </main>
+    <footer>
+        <p>&copy; 2023 Patient Portal</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
