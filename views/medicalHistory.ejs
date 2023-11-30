@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- <script type = "module" src="../JS/medHist.js"></script> -->
+    <script src = "../JS/medHist.js"></script>
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "/CSS/medicalHistory.css" >
+    <title>Patient Portal - Home</title>
+
+   
+</head>
+<body>
+    <header>
+        <img src = "/STATIC/whiteLogoSmall.png" alt = "whiteLogo">
+        <br>
+        <img src = "/STATIC/motto-White.png" alt = "motto">
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/home" >Home</a></li>
+            <li><a href="/Appointment">Appointments</a></li>
+            <li><a href="/medicalHistory" class = "nav_link" data-link>Medical Records</a></li>
+            <li><a href="/billing">Billing Process</a></li>
+            <li><a href="/profile">Profile</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+    
+        <div class="dashboard-content">
+            <h2>Hey User!</h2>
+            
+            <div class = "recentRecords">
+                <p> You Are Currently Viewing Your Medical Records</p>
+    
+    
+            </div>
+        
+        </div>
+
+        <div class = "grid-container">
+
+            <div class = "box01" onclick="location.href='#';" style = "cursor: pointer;">
+                <h2> Results from Recent Appointment </h2>
+
+                <br>
+                <p>Weight: </p>
+                <p>Heart Pulse: </p>
+                <p>Oxygen Levels: </p>
+                <p> Blood Pressure: </p>
+
+            </div>
+
+            <div class = "box02" id = "prescription" onclick="location.href='/Prescriptions'" style = "cursor: pointer;">
+                <h2> Prescription </h2>
+                <p> Click Here To View</p>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                
+            </div>
+
+            <div  class = "box03"  id = "allergies" onclick = "hideDiv()">
+                <h2> Allergies</h2>
+                <p> Latex </p>
+                <p> Penicillen </p>
+                
+
+
+            </div>
+
+            <div class = "box04" onclick="location.href='#';" style = "cursor: pointer;">
+                <h2> Past Results </h2>
+                <p>View Results from Past Appointments Here</p>
+
+
+            </div>
+            
+
+            <div class = "box05" onclick="location.href='#';" style = "cursor: pointer;">
+                <h2> Diagnoses </h2>
+                <p>View Conditions Here</p>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+
+            </div>
+
+            <div class = "box06" onclick="location.href='#';" style = "cursor: pointer;">
+                <h2> Family</h2>
+                <h2> History</h2>
+                
+                <br>
+                <br>
+                <br>
+
+
+            </div>
+
+
+
+        </div>
+        
+        
+                
+
+        
+
+
+        </div>
+        
+
+
+        
+
+        
+    </main>
+    <footer>
+        <p>&copy; 2023 Patient Portal</p>
+    </footer>
+</body>
+</html>
