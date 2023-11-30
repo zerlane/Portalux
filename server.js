@@ -1,20 +1,40 @@
-//install dependencies
+//requires express library
+import express from 'express'
+import bodyParser from 'body-parser'
+import { router } from './back-end/routes/routes.js'
+import path from 'path'
+import bcrypt from 'bcrypt'
+import session from 'express-session'
+import { fileURLToPath } from 'url'
+import mysql from 'mysql'
+import { pool } from './back-end/Database Connection/mysql.js'
+import { insertPatient, emailExists } from './back-end/Database Connection/queries/patients.js'
+
+
+//creates new express app
+const app = express()
+
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.set("view engine", "ejs")
 
 //npm i express mysql ejs nodemon bcrypt express-session
 
 
-const mysql = require('mysql');
-const express = require('express');
-const app = express();
-const path = require('path');
-const bcrypt = require('bcrypt');
-const session = require('express-session');
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Something broke.')
+})
+
+//homepage
+router.use(bodyParser.json())
+app.use('/', router)
 
 
-
-
+app.use(express.static("front-end"))
 
 // Set up session middleware
+//needed for profile display
 app.use(session({
     secret: 'secret-key',
     resave: false,
@@ -23,14 +43,13 @@ app.use(session({
 //parsing requests
 app.use(express.urlencoded({ extended: false}));
 //path to public directory
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const location = path.join(__dirname, "./public");
 //serves static files in public folder
 app.use(express.static(location));
 //setting view engine
 app.set('view engine', 'ejs');
-
-
-
 
 //creating connection 
 const connection = mysql.createConnection({
@@ -76,7 +95,6 @@ connection.connect(function(error){
 });
 
 
-
 //-------------------------------------------------------------------------get requests------------------------------------------------------------------------
 
 
@@ -93,10 +111,6 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-app.get('/home', (req, res) =>{
-    res.render('home');
-})
-
 
 app.get('/profile', (req, res) => {
     // Retrieve the user data from the session
@@ -106,106 +120,81 @@ app.get('/profile', (req, res) => {
     res.render('profile', { user: user });
 });
 
-app.get('/Appointment', (req, res) => {
-    res.render('Appointment');
-})
-
-app.get('/medicalHistory', (req, res) => {
-    res.render('medicalHistory');
-})
-
-app.get('/Prescriptions', (req, res) => {
-    res.render('Prescriptions');
-})
 
 
 
 //-----------------------------------------------------------------------------------------post requests----------------------------------------------------------------------------------------
 
-
 //post request for signuppage
-app.post('/signuppage', function (req, res) {
-    //retrieving data
-	var fname =req.body.fname;
-	var lname = req.body.lname;
-	var dob = req.body.dob;
-	var address = req.body.address;
-  	var email = req.body.email;
-	var phone = req.body.phone;
-	var gender = req.body.gender;
-    var password = req.body.password;
-    var imgpwd = req.body.imgpwd;
+app.post('/signuppage', async (req, res) => {
+    try {
+        let fname =req.body.first_name;
+	    let lname = req.body.last_name;
+	    let dob = req.body.dob;
+	    let address = req.body.address;
+  	    let email = req.body.email;
+	    let phone = req.body.phone;
+	    let gender = req.body.gender;
+        let password = req.body.password;
+        let imgpwd = req.body.imgpwd;
 
-    //selecting email from database 
-    connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
-        if(error){
-            console.log(error);
-        }
-        //checking if email already exists in database
-        if(result.length>0){
-            //displays error message if email already exists
+        if (emailExists(email)) {
             return res.render('signuppage', { msg: 'Email already exists', msg_type: 'error' }  );
-
         }
-        else{
-            //hashing password using bcrypt and storing hashed password in database
-            let hashedPassword = await bcrypt.hash(password, 8);
-            //storing patient data in database
-	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password, imgpwd) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"', '"+imgpwd+"')";
 
-            //performs sql query and if no errors occur, user is redirected to the login page
-            connection.query(sql, function (error, result) {
-                if (error) {
-                    console.error('Error inserting data into MySQL:', error);
-                    res.status(500).send('Error: Data insertion failed.');
-                }
-                else{
-                    console.log(result);
-                    res.redirect('/login');
-                }
-            });
-        }
-    });
-});
+        const hashedPassword = await bcrypt.hash(password, 8);
+        await insertPatient(fname, lname, dob, address, email, phone, gender, hashedPassword, imgpwd)
 
+        res.redirect('/login')
+        
+    } catch (error) {
+        console.error(`Can't make a post request to insert new patient`)
+    }
+})
 
 //post request for login page
-app.post('/login',  (req, res) =>{
-    //retrieving data
-    var email = req.body.email;
-    var pw = req.body.password;
-    var imgpwd = req.body.imgpwd;
+app.post('/login', async (req, res) => {
+    try {
+        const email = req.body.email
+        const password = req.body.password
 
-    //selecting data from databse
-    connection.query('SELECT * FROM bb_database.patients WHERE email=?', [email], async (error, result) => {
-        if(error){
-            console.log(error);
+        if (!emailExists(email)) {
+           return res.render('login',{ msg: 'User does not exist.', msg_type: 'error' })
         }
-        console.log(result);
-        //checking if user exists
-        if (result.length === 0) {
-            //displaying error message if user is not found in database
-            return res.render('login', { msg: 'User does not exist.', msg_type: 'error' }  );
-        }
-        else{
-            //cheching if given requested password and picture matches the hashed password and imgpwd stored in database
-            //redirects to profile page if passwords match
-            if(!(await bcrypt.compare(pw, result[0].password))){
-                return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
-            }
-            if (imgpwd !== result[0].imgpwd) {
-                return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' });
-            }
-            else{
-                req.session.user = result[0];
-                res.redirect('/home');
-            }
-        }
+    } catch (error) {
         
-    });
-});
+    }
+})
+// app.post('/login',  (req, res) =>{
+//     //retrieving data
+//     let email = req.body.email;
+//     let pw = req.body.password;
 
-
+//     //selecting all data from databse
+//     pool.query('SELECT * FROM Patients WHERE email=?', [email], async (error, result) => {
+//         if(error){
+//             console.log(error);
+//         }
+//         console.log(result);
+//         //checking if user exists
+//         if (result.length === 0) {
+//             //displaying error message if user is not found in database
+//             return res.render('login', { msg: 'User does not exist.', msg_type: 'error' }  );
+//         }
+//         else{
+//             //cheching if given requested password matches the hashed password stored in database
+//             //redirects to profile page if password match
+//             if(!(await bcrypt.compare(pw, result[0].password))){
+//                 return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
+//             }
+//             else{
+//                 req.session.user = result[0];
+//                 res.redirect('/profile');
+//             }
+//         }
+        
+//     });
+// });
 
 
 // Set the port for the server to listen on

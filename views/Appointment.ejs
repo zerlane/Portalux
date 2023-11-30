@@ -56,10 +56,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('doctors-rafiki.png');
-            background-size: 30% auto;
-            background-position: center center;
-            background-repeat: no-repeat;
+        
         }
 
         header {
@@ -232,8 +229,12 @@
                     <label for="doctor">Doctor:</label>
                     <select id="doctor">
                         <option value="">Any Doctor</option>
-                        <option value="Dr. Smith">Dr. Smith</option>
-                        <option value="Dr. Johnson">Dr. Johnson</option>
+                        <% doctors.forEach(doctor=> { %>
+                            <option value="<%= doctor.first_name + " " + doctor.last_name %>">
+                                <%= doctor.first_name + " " + doctor.last_name %>
+                            </option>
+                            <% }) %>
+    
                     </select>
                     <br>
                     <br>
@@ -260,204 +261,198 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () {
             const appointmentForm = document.getElementById('appointment-form');
             const availableAppointmentsList = document.getElementById('available-appointments-list');
             const scheduledAppointmentsList = document.getElementById('appointments');
-    
-            const dummyAvailableAppointments = [
-                { date: '2023-11-19', time: '10:00 AM', doctor: 'Dr. Smith' },
-                { date: '2023-11-19', time: '11:00 AM', doctor: 'Dr. Smith' },
-                { date: '2023-11-19', time: '2:00 PM', doctor: 'Dr. Johnson' },
-                { date: '2023-11-20', time: '4:00 PM', doctor: 'Dr. Smith' },
-               
-            ];
-    
+
+
             appointmentForm.addEventListener('submit', function (event) {
-    event.preventDefault();
+                event.preventDefault();
 
-    const dateInput = document.getElementById('date');
-    const doctorInput = document.getElementById('doctor');
+                const dateInput = document.getElementById('date');
+                const doctorInput = document.getElementById('doctor');
 
-    const date = dateInput.value;
-    const doctor = doctorInput.value;
+                const date = dateInput.value;
+                const doctor = doctorInput.value;
 
-    const filteredAppointments = dummyAvailableAppointments.filter(appointment => {
-        const isDateMatch = !date || appointment.date === date;
-        const isDoctorMatch = !doctor || appointment.doctor === doctor;
-        return isDateMatch && isDoctorMatch;
-    });
+                //fetch get requests for all available appointments, available doctor, or available date
+                const getAvailability = async () => {
+                    let data;
 
-    displayAppointments(filteredAppointments, availableAppointmentsList);
-});
+                    if (date && doctor) {
+                        try {
+                            const response = await fetch(`/appointments.json?appointment_date=${date}&first_name=${doctor}`)
+                            data = await response.json()
+                        } catch (err) {
+                            console.err(err)
+                            throw err
+                        }
+                     } else if (doctor && doctor !== 'Any Doctor') {
+                        try {
+                            const response = await fetch(`/appointments.json?first_name=${doctor}`)
+                            data = await response.json()
 
-function cancelAppointment(appointmentItem) {
-    // Set the canceled property to true
-    const appointment = getAppointmentDetails(appointmentItem);
-    appointment.canceled = true;
-    removeAppointment(appointmentItem);
-    alert('Appointment canceled');
-}
+                        } catch (err) {
+                            console.error(err)
+                            throw err
+                        }
+                    } else if (date) {
+                        try {
+                            const response = await fetch(`/appointments.json?appointment_date=${date}`)
+                            data = await response.json()
+                        } catch (err) {
+                            console.error(err)
+                            throw err
+                        }
+                    } else {
+                        try {
+                            const response = await fetch(`/appointments.json?`)
+                            data = await response.json()
 
+                        } catch (err) {
+                            console.error(err)
+                            throw err
+                        }
+                    }
+                    displayAppointments(data, availableAppointmentsList)
+                }
 
-function checkAvailability() {
-            const dateInput = document.getElementById('date');
-            const doctorInput = document.getElementById('doctor');
-
-            const date = dateInput.value;
-            const doctor = doctorInput.value;
-
-            // Filter available appointments based on date and doctor
-            const filteredAppointments = dummyAvailableAppointments.filter(appointment => {
-                const isDateMatch = !date || appointment.date === date;
-                const isDoctorMatch = !doctor || appointment.doctor === doctor;
-                return isDateMatch && isDoctorMatch;
+                //for some reason, this line is needed to display appointments, don't delete
+                const requestedAppts = getAvailability().then(result => result)
             });
 
-            // Filter out already scheduled appointments at the same time
-            const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
-                return appointmentItem.querySelector('[data-type="time"]').innerText;
-            });
 
-            const uniqueAvailableAppointments = filteredAppointments.filter(appointment => {
-                return !scheduledTimes.includes(appointment.time);
-            });
+            function displayAppointments(appointments, listElement) {
+                listElement.innerHTML = '';
 
-            displayAppointments(uniqueAvailableAppointments, availableAppointmentsList);
-        }
-
-function displayAppointments(appointments, listElement) {
-    listElement.innerHTML = '';
-
-    if (appointments.length === 0) {
-        listElement.innerHTML = '<li>No appointments available.</li>';
-    } else {
-        appointments.forEach(appointment => {
-            const listItem = document.createElement('li');
-            const appointmentTime = appointment.time;
-            listItem.innerHTML = `Date: ${appointment.date}, Time: ${appointmentTime}, Doctor: ${appointment.doctor}
+                if (appointments.length === 0) {
+                    listElement.innerHTML = '<li>No appointments available.</li>';
+                } else {
+                    appointments.forEach(appointment => {
+                        const listItem = document.createElement('li');
+                        const appointmentDate = new Date(appointment.appointment_date);
+                        const appointmentDoctor = `${appointment.first_name} ${appointment.last_name}`;
+                        const appointmentTime = appointment.appointment_time;
+                        listItem.innerHTML = `Date: ${appointmentDate.toLocaleDateString()}, Time: ${appointmentTime}, Doctor: ${appointmentDoctor}, Specialty: ${appointment.specialty}&emsp;
                 <button class="schedule-appointment">Schedule</button>`;
 
-            const scheduleBtn = listItem.querySelector('.schedule-appointment');
-            scheduleBtn.addEventListener('click', function () {
-                scheduleAppointment(appointment);
-            });
+                        //fetch request by patch method to update Appointment database to Active once scheduled
+                        const scheduleBtn = listItem.querySelector('.schedule-appointment');
+                        scheduleBtn.addEventListener('click', function () {
+                            fetch(`/appointments/schedule/${appointment.id}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(response => response.json())
+                            scheduleAppointment(appointment);
+                        });
 
-            listElement.appendChild(listItem);
-        });
-    }
-}
-
-    
-            
-function scheduleAppointment(appointment) {
-
-    // This Check if the time slot is still available
-    const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
-                return appointmentItem.querySelector('[data-type="time"]').innerText;
-            });
-
-            if (scheduledTimes.includes(appointment.time)) {
-                alert('This appointment time is no longer available. Please choose another time.');
-                return;
+                        listElement.appendChild(listItem);
+                    });
+                }
             }
-    
-    const appointmentItem = document.createElement('li');
-    appointmentItem.innerHTML = `<strong data-type="doctor">Doctor:</strong> ${appointment.doctor}, <strong data-type="date">Date:</strong> ${appointment.date}, <strong data-type="time">Time:</strong> ${appointment.time}
+
+
+
+            function scheduleAppointment(appointment) {
+                const appointmentDate = new Date(appointment.appointment_date);
+                const appointmentDoctor = `${appointment.first_name} ${appointment.last_name}`;
+                const appointmentTime = appointment.appointment_time;
+
+                // This Check if the time slot is still available
+                const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
+                    return appointmentItem.querySelector('[data-type="time"]').innerText;
+                });
+
+                if (scheduledTimes.includes(appointment.appointment_time)) {
+                    alert('This appointment time is no longer available. Please choose another time.');
+                    return;
+                }
+
+                const appointmentItem = document.createElement('li');
+                appointmentItem.innerHTML = `<strong data-type="doctor">Doctor:</strong> ${appointmentDoctor}, <strong data-type="date">Date:</strong> ${appointmentDate.toLocaleDateString()}, <strong data-type="time">Time:</strong> ${appointment.appointment_time}, 
+                <strong>Specialty:</strong> ${appointment.specialty}<br><br>
         <button class="cancel-appointment">Cancel</button>
         <button class="reschedule-appointment">Reschedule</button>
         <button class="view-appointment">View</button>`;
 
-    appointmentItem.style.border = '1px solid #ccc';
-    appointmentItem.style.padding = '10px';
-    appointmentItem.style.marginBottom = '10px';
+                appointmentItem.style.border = '1px solid #ccc';
+                appointmentItem.style.padding = '10px';
+                appointmentItem.style.marginBottom = '10px';
 
-    scheduledAppointmentsList.appendChild(appointmentItem);
-    
-    const cancelBtn = appointmentItem.querySelector('.cancel-appointment');
-    cancelBtn.addEventListener('click', function () {
-        const confirmation = confirm('Please confirm to cancel the appointment');
-        if (confirmation) {
-            removeAppointment(appointmentItem);
-            alert('Appointment canceled');
-        }
-    });
+                scheduledAppointmentsList.appendChild(appointmentItem);
 
-    const viewBtn = appointmentItem.querySelector('.view-appointment');
-    viewBtn.addEventListener('click', function () {
-        alert(`Viewing appointment details:\nDate: ${appointment.date}\nTime: ${appointment.time}\nDoctor: ${appointment.doctor}`);
-    });
+                const cancelBtn = appointmentItem.querySelector('.cancel-appointment');
+                cancelBtn.addEventListener('click', function () {
+                    const confirmation = confirm('Please confirm to cancel the appointment');
+                    if (confirmation) {
+                        fetch(`/appointments/cancel/${appointment.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(response => response.json())
+                        removeAppointment(appointmentItem);
+                        alert('Appointment canceled');
+                    }
+                });
 
-    const rescheduleBtn = appointmentItem.querySelector('.reschedule-appointment');
-    rescheduleBtn.addEventListener('click', function () {
-        displayAvailableAppointmentsForReschedule(appointmentItem, appointment);
-    });
+                const viewBtn = appointmentItem.querySelector('.view-appointment');
+                viewBtn.addEventListener('click', function () {
+                    alert(`Viewing appointment details:\nDate: ${appointmentDate.toLocaleDateString()}\nTime: ${appointmentTime}\nDoctor: ${appointmentDoctor}`);
+                });
 
-    
-    availableAppointmentsList.innerHTML = '';
-}
+                const rescheduleBtn = appointmentItem.querySelector('.reschedule-appointment');
+                rescheduleBtn.addEventListener('click', async function () {
+
+                    //the reschedule button assumes that the patient wants to schedule with the same doctor
+                    fetch(`/appointments/cancel/${appointment.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(response => response.json())
+                        removeAppointment(appointmentItem);
+                        let data;
+                        try {
+                            const response = await fetch(`/appointments.json?first_name=${appointmentDoctor}`)
+                            data = await response.json()
+
+                        } catch (err) {
+                            console.error(err)
+                            throw err
+                        }
+                    displayAppointments(data, availableAppointmentsList)    
+                });
 
 
-
-    
-function displayAvailableAppointmentsForReschedule(scheduledAppointmentItem, selectedAppointment) {
-    removeAppointment(scheduledAppointmentItem);
-
-    const filteredAppointments = dummyAvailableAppointments.filter(appointment =>
-        appointment.date === selectedAppointment.date && appointment.doctor === selectedAppointment.doctor &&
-        !appointment.canceled
-    );
-
-    // Filter out already scheduled appointments at the same time
-    const scheduledTimes = Array.from(scheduledAppointmentsList.children).map(appointmentItem => {
-        return appointmentItem.querySelector('[data-type="time"]').innerText;
-    });
-    const uniqueAvailableAppointments = filteredAppointments.filter(appointment => {
-        return !scheduledTimes.includes(appointment.time);
-    });
-
-    // Display available appointments for rescheduling
-    displayAppointments(uniqueAvailableAppointments, availableAppointmentsList);
-
-    scheduledAppointmentItem.querySelector('.reschedule-appointment').innerText = 'Select for Reschedule';
-
-    const rescheduleBtns = availableAppointmentsList.querySelectorAll('.schedule-appointment');
-    rescheduleBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            const newDate = this.getAttribute('data-date');
-            const newTime = this.getAttribute('data-time');
-            const newDoctor = this.getAttribute('data-doctor');
-            removeAppointment(scheduledAppointmentItem);
-            const selectedAppointment = availableAppointmentsList.querySelector('.selected');
-            if (selectedAppointment) {
-                selectedAppointment.classList.remove('selected');
+                availableAppointmentsList.innerHTML = '';
             }
-            availableAppointmentsList.innerHTML = '';
-            scheduleAppointment({ date: newDate, time: newTime, doctor: newDoctor });
-            alert('Appointment rescheduled');
-        });
-    });
-}
 
 
 
-function updateScheduledAppointmentDetails(appointmentItem, newAppointment) {
-    const { date, time, doctor } = newAppointment;
+            function updateScheduledAppointmentDetails(appointmentItem, newAppointment) {
+                const { date, time, doctor } = newAppointment;
 
-    appointmentItem.innerHTML = `<strong>Doctor:</strong> ${doctor}, <strong>Date:</strong> ${date}, <strong>Time:</strong> ${time}
+                appointmentItem.innerHTML = `<strong>Doctor:</strong> ${doctor}, <strong>Date:</strong> ${date}, <strong>Time:</strong> ${time}
     <button class="cancel-appointment">Cancel</button>
     <button class="reschedule-appointment">Reschedule</button>
     <button class="view-appointment">View</button>`;
-}
+            }
 
-function removeAppointment(appointmentItem) {
-    scheduledAppointmentsList.removeChild(appointmentItem);
-}
+            function removeAppointment(appointmentItem) {
+                scheduledAppointmentsList.removeChild(appointmentItem);
+            }
 
 
-});
+        });
 
-</script>
+    </script>
 
 </body>
 
