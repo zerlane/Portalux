@@ -6,40 +6,41 @@
     </head>
     <style>
 
-        #title{
-            text-align: center;
-           
-        }
 
 
         #entryinfo{
             display:grid;
-            place-items: center;
+            place-items: left;
             
         }
 
         #background{
-            background-image: url("/STATIC/happypeople2.png");
-            background-size: cover;
+            background-image: url(../STATIC/International\ Youth\ Day-pana.png);
+            background-size:cover;
             background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-position-x: 80px;
+            
             
         }
 
         #loginsquare{
 
             border-radius: 25px;
-            /* padding: 100px 0px;
-            margin-left: 100px;
-            margin-right: 100px; */
+            padding: 50px 0px;
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-           
 
             text-align: center;
-            font-size: 20px;
-            
+            font-size: larger;
 
             background-color: rgba(214, 210, 208, 0.39);
+            
+            margin: auto;
+            margin-top: 4%;
+            margin-bottom: 5%;
+            
+            min-width: 50%;
+            max-width: 70%;
+            height: 100%;
             
         }
 
@@ -56,16 +57,73 @@
 
         #submit{
            
-            font-size: large;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #dcb7d9;
-            border-radius: 10px;
-            border-color: aliceblue;
+           font-size: large;
+           font-family: Verdana, Geneva, Tahoma, sans-serif;
+           background-color: #dcb7d9;
+           border-radius: 10px;
+           border-color: aliceblue;
+        }
+
+       #submit:hover {
+           background-color: rgb(147, 65, 202);
+           color: white;
         }
         #address{
             vertical-align: top; /* Set vertical alignment to top */
-           resize: none;
+            resize: none;
         }
+        #title {
+    
+            text-align: left;
+            margin-left: 75px;
+            margin-bottom: 20px;
+            
+            font-size: 75px;
+            font:bolder;
+            
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+            color: #8c67bd;
+            opacity: .75;
+           
+        }
+        input {
+            font-size: large;
+            text-align: center;
+            border-radius: 10px;
+            border-color: rgba(214, 210, 208, 0.37);
+            height: 35px;
+            justify-content: left;
+        }
+        input:hover {
+            border-color: rgb(133, 1, 221);
+
+        }
+        input:focus {
+            background-color: #e2cce0;
+        }
+        #address {
+            font-size: large;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            border-radius: 10px;
+            border-color: rgba(214, 210, 208, 0.37);
+
+        }
+        #address:hover {
+            border-color: #8c67bd;
+        }
+        #address:focus {
+            background-color: #dcb7d9b2;
+            
+        }
+        label {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight:550;
+            font-variant: small-caps;
+            color: rgb(100, 99, 99);
+        }
+
 
        
 
@@ -74,7 +132,8 @@
     <body id="background" style="background-color: aliceblue;" >
 
         <div id="loginsquare">
-        <h1 id="title"style="font-family: 'Times New Roman',serif;"> Welcome Newbie!</h1>
+            
+            <p id="title"> Welcome <br> Newbie!</p>
 
         <div id="entryinfo" >
             <div id="error-message" style="color: red; text-align: center;">
@@ -86,19 +145,19 @@
         <form action="/signuppage" method="POST">
             
             <label for="fname">First Name:</label>
-            <input type="text" id="fname" name="fname" size="30" required>
+            <input type="text" id="fname" name="fname" size="30" required placeholder = "Enter First Name Here" >
             <br><br>
             <label for="lname">Last Name:</label>
-            <input type="text" id="lname" name="lname" size="30" required>
+            <input type="text" id="lname" name="lname" size="30" required placeholder = "Enter Last Name Here">
             <br><br>
             <label for="dob">Date of Birth:</label>
             <input type="date" id="dob" name="dob" size="30" required>
             <br><br>
             <label for="address">Address:</label>
-            <textarea id="address" name="address" rows="2" cols="30" required></textarea>
+            <textarea id="address" name="address" rows="2" cols="30" placeholder="Enter Address Here" required></textarea>
             <br><br>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" size="35" required>
+            <input type="email" id="email" name="email" size="35" required placeholder="Enter Email Here">
             <br><br>
             <label for="phone">Phone Number:</label>
             <input type="text" id="phone" name="phone" placeholder="xxx-xxx-xxxx" size="25" required>
@@ -113,7 +172,7 @@
             <label for="password">Password:</label>
             <input type="text" id="password" name="password" size="20" required>
             <br>
-<h4 style="font-family: 'Times New Roman',serif;"> Choose Your Second Authentication Image</h4>
+<h4 style="font-family: 'Times New Roman',serif;"> Choose Your Image <br> (This is your second way to authenticate yourself when you sign in)</h4>
             <div id="images">
             <img id="img1" src="/STATIC/burger.jpg" data-value="1234" onclick="selectImage(this)">
             <img id="img2" src="/STATIC/brownpuppy.jpg" data-value = "5678" onclick="selectImage(this)">
@@ -131,13 +190,19 @@
 
             <input type="hidden" id="imgpwd" name="imgpwd">
             <br><br>
-            <button id="submit"> Submit</button>
+            <button id="submit"> Create Account</button>
         </form>
 
     </div>
+    <br>
+    <img src = "../STATIC/whiteLogoMedium.png" alt = "logo">
+    
         </div>
+    
+        
        
     </body>
+
 <script>
 
         let currentselect = null;
