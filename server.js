@@ -15,7 +15,6 @@ const session = require('express-session');
 
 
 // Set up session middleware
-//needed for profile display
 app.use(session({
     secret: 'secret-key',
     resave: false,
@@ -62,8 +61,7 @@ connection.connect(function(error){
     }
 
             //creating table
-	//add imgpwd, salt fields
-            var sql = "CREATE TABLE IF NOT EXISTS bb_database.patients (id INT AUTO_INCREMENT PRIMARY KEY, fname CHAR(75) NOT NULL, lname CHAR(75) NOT NULL, dob DATE NOT NULL, address TEXT(150) NOT NULL, email VARCHAR(75) NOT NULL, phone VARCHAR(10) NOT NULL, gender CHAR(6) NOT NULL, password VARCHAR(60) NOT NULL)";
+            var sql = "CREATE TABLE IF NOT EXISTS bb_database.patients (id INT AUTO_INCREMENT PRIMARY KEY, fname CHAR(75) NOT NULL, lname CHAR(75) NOT NULL, dob DATE NOT NULL, address TEXT(150) NOT NULL, email VARCHAR(75) NOT NULL, phone VARCHAR(10) NOT NULL, gender CHAR(6) NOT NULL, password VARCHAR(60) NOT NULL, imgpwd VARCHAR(60) NOT NULL)";
             connection.query(sql, function (error, result) {
                 if (error)
                 {
@@ -112,6 +110,13 @@ app.get('/Appointment', (req, res) => {
     res.render('Appointment');
 })
 
+app.get('/medicalHistory', (req, res) => {
+    res.render('medicalHistory');
+})
+
+app.get('/Prescriptions', (req, res) => {
+    res.render('Prescriptions');
+})
 
 
 
@@ -120,7 +125,7 @@ app.get('/Appointment', (req, res) => {
 
 //post request for signuppage
 app.post('/signuppage', function (req, res) {
-    	//retrieving data
+    //retrieving data
 	var fname =req.body.fname;
 	var lname = req.body.lname;
 	var dob = req.body.dob;
@@ -128,8 +133,8 @@ app.post('/signuppage', function (req, res) {
   	var email = req.body.email;
 	var phone = req.body.phone;
 	var gender = req.body.gender;
-    	var password = req.body.password;
-	//var imgpwd = req.body.imgpwd;
+    var password = req.body.password;
+    var imgpwd = req.body.imgpwd;
 
     //selecting email from database 
     connection.query('SELECT email FROM bb_database.patients WHERE email=?', [email], async (error, result) =>{
@@ -145,10 +150,8 @@ app.post('/signuppage', function (req, res) {
         else{
             //hashing password using bcrypt and storing hashed password in database
             let hashedPassword = await bcrypt.hash(password, 8);
-		//hash imgpwd here
             //storing patient data in database
-		//add imgpwd, salt field
-	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"')";
+	        var sql = "INSERT INTO bb_database.patients (fname, lname, dob, address, email, phone, gender, password, imgpwd) VALUES ('"+fname+"', '"+lname+"','"+dob+"', '"+address+"','"+email+"', '"+phone+"', '"+gender+"', '"+hashedPassword+"', '"+imgpwd+"')";
 
             //performs sql query and if no errors occur, user is redirected to the login page
             connection.query(sql, function (error, result) {
@@ -171,8 +174,9 @@ app.post('/login',  (req, res) =>{
     //retrieving data
     var email = req.body.email;
     var pw = req.body.password;
+    var imgpwd = req.body.imgpwd;
 
-    //selecting all data from databse
+    //selecting data from databse
     connection.query('SELECT * FROM bb_database.patients WHERE email=?', [email], async (error, result) => {
         if(error){
             console.log(error);
@@ -184,13 +188,13 @@ app.post('/login',  (req, res) =>{
             return res.render('login', { msg: 'User does not exist.', msg_type: 'error' }  );
         }
         else{
-            //cheching if given requested password matches the hashed password stored in database
-
-		//check that imgpwd also matches
-		
-            //redirects to profile page if password match
+            //cheching if given requested password and picture matches the hashed password and imgpwd stored in database
+            //redirects to profile page if passwords match
             if(!(await bcrypt.compare(pw, result[0].password))){
                 return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
+            }
+            if (imgpwd !== result[0].imgpwd) {
+                return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' });
             }
             else{
                 req.session.user = result[0];
@@ -200,15 +204,6 @@ app.post('/login',  (req, res) =>{
         
     });
 });
-
-app.post('/profile',  (req, res) =>{
-    res.redirect('/profile');
-});
-
-app.post('/appoinments', (req, res) => {
-    res.redirect('/Appointment');
-})
-
 
 
 
