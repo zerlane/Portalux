@@ -1,0 +1,276 @@
+body, h1, h2, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Overall page style */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    background-image: url(../STATIC/plantAbstrct.png);
+    
+}
+
+/* Header style */
+header {
+    background-color: rgb(109, 75, 106);
+    color: rgb(164, 102, 206) ;
+    text-align: left;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    padding: 20px 0;
+    font-size: 28px;
+    background-image: url(../STATIC/Season\ change-amico.png);
+    background-blend-mode:soft-light;
+    background-size: 60%;
+    background-position-y: center;
+    background-position-x: right;
+    background-repeat: no-repeat;
+    text-shadow: 2px 2px 4px #918484;
+
+    
+    
+    
+}
+
+/* Navigation menu style */
+
+/* Navigation menu style */
+nav {
+    background-color:  rgb(230, 232, 233);
+    text-align: left;
+    padding: 1px;
+    box-shadow:2px 2px 12px #a7a3a3;
+    opacity:90%;
+    
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+nav li {
+    
+    float:left;
+    
+}
+
+nav a {
+    text-decoration: none;
+    color: #463f3f;
+    font-size: 18px;
+    display: block;
+    font-family:sans-serif;
+    font-weight: bold;
+    padding: 15px;
+    transition: background-color 0.3s;
+    
+
+}
+
+nav a:hover {
+    background-color: aliceblue;
+    
+    
+}
+
+.home_link {
+    background-color: aliceblue;
+    color:#000000;
+
+    
+}
+.profileIcon {
+    width: 50px;
+    height: 50px;
+    margin:auto;
+}
+
+.home_link {
+    background-color: aliceblue;
+    color:#000000;
+}
+body {
+    background-color: aliceblue;
+}
+
+/* Main content area style */
+main {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(20, 19, 19, 0.2);
+    border-radius: 5px;
+    margin: 20px;
+    
+}
+
+/* Dashboard-style content */
+/* .dashboard-content {
+    text-align: center;
+    padding: 40px;
+} */
+
+.dashboard-content h2 {
+    font-size: 36px;
+    color: #b054c1;
+    margin-bottom: 20px;
+}
+
+
+.cta-button {
+    display: inline-block;
+    background-color: #b054c1;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+/* Footer style */
+footer {
+    background-color: rgb(221, 233, 243);
+    color: #463f3f;
+    font-weight: bold;
+    font-family:sans-serif;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow:2px 2px 12px #a7a3a3;
+}
+
+.cta-button:hover {
+    background-color: #893893;
+}
+.recentRecords {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #555;
+
+}
+.dashboard-content {
+    display: grid;  
+    grid-gap:  2vw;
+    grid-template-columns: 
+    repeat(12, 1fr);
+    background-color: #ffffff;
+    margin-inline:auto;
+    padding: 2vw;
+}
+.dashboard-header {
+    grid-column-start: 6;
+    grid-column: span 3;
+    text-align: center;
+    justify-content: center;
+    
+
+
+
+}
+#welcomeSign {
+    text-align: center;
+
+}
+.grid-item1 {
+    
+    background-color: #ffffff;
+    /* box-shadow: 2px 2px 5px #585757;
+    padding: 2vw;
+    border-radius: 3vw; */
+    
+    grid-column: 1/6;
+    /* background-image: url(../STATIC/Getting\ Coffee-pana.png);
+    background-size: contain;
+    background-repeat: no-repeat; */
+    grid-row: 1/3;
+    background-image: url(../STATIC/Listening\ happy\ music-pana.png);
+    background-size: cover;
+    background-position-x: center ;
+}
+
+.grid-item1 img {
+    justify-content: center;
+    max-width: 50%;
+    max-height: 50%;
+}
+.grid-container2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column: 6/9;
+    background-color: #ffffff;
+    padding: 2vw 2vw;
+    grid-gap: 2vw;
+    justify-content: center;
+    
+    
+}
+.grid-item-2 {
+    
+    background-color: #eeeeee;
+    box-shadow: 2px 2px 5px #585757;
+    padding: 2vw;
+    border-radius: 3vw;
+    width: fit-content;
+
+    
+    
+
+}
+
+#message {
+    background-image: url(../STATIC/messageCircleIcon.png);
+    background-size: 50%;
+    background-blend-mode:lighten;
+    background-repeat: no-repeat;
+    background-position-x: right;
+}
+
+
+.reminders p {
+    font-size: large;
+    font-weight: 600;
+}
+
+.grid-item-3 {
+    background-color: #eeeeee;
+    box-shadow: 2px 2px 5px #585757;
+    padding: 2vw;
+    border-radius: 3vw;
+    width: fit-content;
+    
+}
+.grid-container3 {
+    grid-column: 9/13;
+    background-color: #eeeeee;
+    box-shadow: 2px 2px 5px #585757;
+    padding: 2vw;
+    border-radius: 3vw;
+    grid-gap: 2vw;
+    display: grid;
+    width: fit-content;
+
+
+}
+#label {
+    
+    font-size: 35px;
+    color: #b054c1;
+    font-weight: bolder;
+}
+#label:hover {
+    color:white;
+}
+.grid-item-2:hover {
+    color: white;
+    box-shadow: 10px 10px 25px plum;
+    background-color: rgb(175, 124, 209);
+    transition:0.3s;
+    
+}
+p {
+    font-weight: bold;
+    color: #272727;
+}
+
