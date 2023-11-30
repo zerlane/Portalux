@@ -5,33 +5,25 @@ p {
 }
 
 body {
-    min-height: 100vh;
     margin: 0px;
     background-color: #f4f4f4;
 }
 
 /* Header style */
 header {
-    background-color: rgb(109, 75, 106);
-    color: rgb(164, 102, 206);
-    text-align: left;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #322636;
+    color: #fff;
+    text-align: center;
+    font-style: italic;
     padding: 20px 0;
     font-size: 28px;
-    background-image: url(../STATIC/Season\ change-amico.png);
+    background-image: url(../STATIC/Medical\ care-amico.png);
+    background-size: 90vw;
+    background-position-y: 20%;
+    text-shadow: 2px 2px 4px #000000;
     background-blend-mode: soft-light;
-    background-size: 60%;
-    background-position-y: center;
-    background-position-x: right;
-    background-repeat: no-repeat;
-    text-shadow: 2px 2px 4px #918484;
-
-
-
 
 }
-
-
 
 /* Navigation menu style */
 nav {
@@ -75,20 +67,7 @@ nav a:hover {
 
 }
 
-.home_link {
-    background-color: aliceblue;
-    color: #000000;
-
-
-}
-
-.profileIcon {
-    width: 50px;
-    height: 50px;
-    margin: auto;
-}
-
-.home_link {
+.nav_link {
     background-color: aliceblue;
     color: #000000;
 }
