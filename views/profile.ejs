@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Portal - Home</title>
+    <title>Profile</title>
     <style>
         /* Reset some default styles */
         body, h1, h2, p {
@@ -14,91 +14,70 @@
 
         /* Overall page style */
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
 
         /* Header style */
-    header {
-        background-color: rgb(109, 75, 106);
-        color: rgb(164, 102, 206) ;
-        text-align: left;
-        font-family:Georgia, 'Times New Roman', Times, serif;
-        padding: 20px 0;
-        font-size: 28px;
-        background-image: url(../STATIC/Season\ change-amico.png);
-        background-blend-mode:soft-light;
-        background-size: 60%;
-        background-position-y: center;
-        background-position-x: right;
-        background-repeat: no-repeat;
-        text-shadow: 2px 2px 4px #918484;
-
-        
-        
-        
-    }
+        header {
+            background-color: #322636;
+            color: #fff;
+            text-align: center;
+            font-style: italic;
+            padding: 20px 0;
+            font-size: 28px;
+            background-image: url(../STATIC/Medical\ care-amico.png);
+            background-size: 90vw;
+            background-position-y: 20%;
+            text-shadow: 2px 2px 4px #000000;
+            background-blend-mode: soft-light;
+        }
 
 /* Navigation menu style */
+        nav {
+            background-color: rgb(230, 232, 233);
+            text-align: left;
+            padding: 1px;
+            box-shadow: 2px 2px 12px #a7a3a3;
+            opacity: 90%;
 
-/* Navigation menu style */
-    nav {
-        background-color:  rgb(230, 232, 233);
-        text-align: left;
-        padding: 1px;
-        box-shadow:2px 2px 12px #a7a3a3;
-        opacity:90%;
-        
-    }
+        }
 
-    nav ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
 
-    nav li {
-        
-        float:left;
-        
-    }
+        nav li {
 
-    nav a {
-        text-decoration: none;
-        color: #463f3f;
-        font-size: 18px;
-        display: block;
-        font-family:sans-serif;
-        font-weight: bold;
-        padding: 15px;
-        transition: background-color 0.3s;
-        
+            float: left;
 
-    }
+        }
 
-    nav a:hover {
-        background-color: aliceblue;
-        
-        
-    }
+        nav a {
+            text-decoration: none;
+            color: #463f3f;
+            font-size: 18px;
+            display: block;
+            font-family: sans-serif;
+            font-weight: bold;
+            padding: 15px;
+            transition: background-color 0.3s;
 
-.home_link {
-    background-color: aliceblue;
-    color:#000000;
 
-    
-}
-.profileIcon {
-    width: 50px;
-    height: 50px;
-    margin:auto;
-}
+        }
 
-.home_link {
-    background-color: aliceblue;
-    color:#000000;
-}
+        nav a:hover {
+            background-color: aliceblue;
+
+
+        }
+
+        .nav_link {
+            background-color: aliceblue;
+            color: #000000;
+        }
 
         /* Main content area style */
         main {
@@ -179,36 +158,20 @@
 </head>
 <body>
     <header>
-        
-        <img src = "/STATIC/whiteLogoSmall.png" alt = "logoTitle" class = "logoTitle">
-        <br> 
-        <!-- <img src = "../STATIC/motto-White.png" alt = "motto" > -->
+        <img src = "/STATIC/whiteLogoSmall.png" alt = "whiteLogo">
+        <br>
+        <img src = "/STATIC/motto-White.png" alt = "motto">
     </header>
+    <nav>
+        <ul>
+            <li><a href="/home" >Home</a></li>
+            <li><a href="/Appointment">Appointments</a></li>
+            <li><a href="/medicalHistory" class = "nav_link" data-link>Medical Records</a></li>
+            <li><a href="/billing">Billing Process</a></li>
+            <li><a href="/profile">Profile</a></li>
+        </ul>
+    </nav>
     
-
-       
-       
-    <div class = "navContainer" >
-        
-        <nav>
-            <ul>
-                <!-- <li><img src = "../STATIC/portaLuxBunnyLogo.png"alt = "logoImg" class = "logoImg" width = "90"></li> -->
-
-                <li><a href="home.html"  class = "home_link">Home</a></li>
-                <form action="/appointments" method="POST">
-                <li><a href="/appointment">Appointments</a></li>
-                </form>
-            
-                <li><a href="medicalHistory.html" class = "nav_link" data-link>Medical Records</a></li>
-                <li><a href="billing.html">Billing Process</a></li>
-                <form action="/profile" method="POST">
-                <li><a href="/profile">Profile</a></li>
-                </form>
-
-                
-            </ul>
-        </nav>
-    </div>
     <main>
         <div class="dashboard-content">
             <div class="profileshow" style="background-color:#ebdede">
