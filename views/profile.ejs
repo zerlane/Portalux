@@ -16,57 +16,70 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            background-image: url(../STATIC/plantAbstrct.png);
+            
         }
 
         /* Header style */
         header {
-            background-color: #b054c1;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-            font-size: 28px;
+            background-color: rgb(109, 75, 106);
+            color: white;
+            text-align: left;
+            padding: 10px;
+            
+            
+            
         }
 
         /* Navigation menu style */
         nav {
-            background-color: #333;
+            background-color:  rgb(230, 232, 233);
             text-align: left;
-            padding: 20px;
+            padding: 1px;
+            box-shadow:2px 2px 12px #a7a3a3;
+            opacity:90%;
+            
         }
 
         nav ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         nav li {
-            margin-bottom: 10px;
-            display: inline;
+            
+            float:left;
+            
         }
 
         nav a {
             text-decoration: none;
-            color: #fff;
+            color: #463f3f;
             font-size: 18px;
-            /* display: block; */
-            padding: 10px;
+            display: block;
+            font-family:sans-serif;
+            font-weight: bold;
+            padding: 15px;
             transition: background-color 0.3s;
+            
+
         }
 
         nav a:hover {
-            background-color: #555;
+            background-color: aliceblue;
+            
+            
         }
 
-        /* Main content area style */
-        main {
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            margin: 20px;
+        .nav_link {
+            background-color: aliceblue;
+            color:#000000;
         }
-
+        body {
+            background-color: aliceblue;
+        }
         /* Dashboard-style content */
         .dashboard-content {
             text-align: center;
@@ -98,10 +111,18 @@
         }
         /* Footer style */
         footer {
-            background-color: #333;
-            color: #fff;
+            background-color: rgb(221, 233, 243);
+            color: #463f3f;
+            font-weight: bold;
+            font-family:sans-serif;
             text-align: center;
-            padding: 20px 0;
+            padding: 10px 0;
+            box-shadow:2px 2px 12px #a7a3a3;
+            position:fixed;
+            left:0px;
+            bottom:0px;
+           
+            width:100%;
         }
 
         .cta-button:hover {
@@ -121,6 +142,34 @@
             object-fit: cover;
             
         }
+        h1 {
+            
+            margin-bottom: 20px;
+            font-size: 40px;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-weight: lighter;
+            
+            color: #b054c1;
+            opacity: .70;
+        }
+        .profileCard {
+            border-radius: 25px;
+            padding: 50px 0px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
+            text-align: center;
+            font-size: larger;
+
+            background-color: rgba(214, 210, 208, 0.39);
+            
+            margin: auto;
+            margin-top: 2%;
+            margin-bottom: 10%;
+            
+            min-width: 50%;
+            max-width: 70%;
+            height: 100%;
+        }
 
     
         
@@ -129,7 +178,7 @@
 <body>
     <header>
         
-         <h1> Welcome to the Patient Portal</h1> 
+        <img src = "../STATIC/whiteLogosmall.png"  alt = "wordLogo" >
     </header>
     <nav>
        
@@ -149,19 +198,23 @@
                <img src="/STATIC/profilepic.png">
                <h3> <%= user.fname %></h3>
             </div>
-            <h1>Profile Information</h1>
-            <p>First Name: <%= user.fname %></p>
-            <p>Last Name: <%= user.lname %></p>
-            <p>Date of Birth: <%= user.dob %></p>
-            <p>Address: <%= user.address %></p>
-            <p>Email: <%= user.email %></p>
-            <p>Phone Number: <%= user.phone %></p>
-            <p>Gender: <%= user.gender %></p>
+            <div class = "profileCard">
+                <h1>Profile Information</h1>
+                <p>First Name: <%= user.fname %></p>
+                <p>Last Name: <%= user.lname %></p>
+                <p>Date of Birth: <%= user.dob %></p>
+                <p>Address: <%= user.address %></p>
+                <p>Email: <%= user.email %></p>
+                <p>Phone Number: <%= user.phone %></p>
+                <p>Gender: <%= user.gender %></p>
+            </div>
             
         </div>
     </main>
     <footer>
+        
         <p>&copy; 2023 Patient Portal</p>
     </footer>
 </body>
+
 </html>
