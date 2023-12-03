@@ -55,6 +55,25 @@ export const getOnePatient = async (email) => {
     }
 }
 
-
-
-
+export const getPatientAppts = async (id) => {
+    try {
+        const [patientAppts] = await pool.query(`
+            SELECT app.id, doc.first_name, doc.last_name, doc.specialty, app.appointment_date,
+                TIME_FORMAT(app.appointment_time, '%h:%i %p') AS appointment_time,
+                p.id as patient_id
+            FROM ((Appointments AS app
+                INNER JOIN Doctors AS doc
+                    ON app.doctor_id = doc.id)
+                INNER JOIN Patients AS p
+                ON app.patient_id = p.id)
+                WHERE p.id = ?`, [id])
+        if(patientAppts.length === 0) {
+            console.log(`Patient has no scheduled appointments`)
+            return null
+        }
+        return patientAppts
+    } catch (err) {
+        console.error(`Error getting all scheduled appts for patients on the appt table: ${err}`)
+        throw err
+    }
+}

@@ -83,7 +83,9 @@ app.get('/home', (req, res) => {
 })
 
 app.get('/medicalhistory', (req, res) => {
-    res.render('medicalHistory')
+    const user = req.session.user;
+
+    res.render('medicalHistory', { user })
 })
 
 //implemented in the future
@@ -102,6 +104,7 @@ app.get('/logout', (req, res) => {
         if (err) {
             throw err
         }
+        console.log(`User has been logged out.`)
         res.redirect('/')
     })
 })
@@ -151,10 +154,9 @@ app.post('/login', async (req, res) => {
         }
 
         let comparePW = await bcrypt.compare(password, result[0].password)
+        let compareImgPwd = imgpwd === result[0].imgpwd
 
-        if(!comparePW) {
-            return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' });
-        } else {
+        if(comparePW && compareImgPwd) {
             req.session.user = result[0]
 
             req.session.save((err) => {
@@ -165,7 +167,8 @@ app.post('/login', async (req, res) => {
                 res.redirect('/profile')
 
             })
-            
+        } else {
+            return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' });
         }
 
 

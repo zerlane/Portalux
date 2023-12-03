@@ -245,8 +245,7 @@
         <section id="available-appointments">
             <h2>Available Appointments</h2>
             <ul id="available-appointments-list">
-                
-                
+
             </ul>
         </section>
         <section id="appointment-list">
@@ -266,6 +265,15 @@
             const availableAppointmentsList = document.getElementById('available-appointments-list');
             const scheduledAppointmentsList = document.getElementById('appointments');
 
+            //fetch patient appointments from back-end
+            const patientAppts = <%-JSON.stringify(userAppts)%>
+            
+            //add patient appointments if they already have some scheduled
+            if (patientAppts !== null) {
+                patientAppts.forEach(appointment => {
+                    scheduleAppointment(appointment)
+                })
+            } 
 
             appointmentForm.addEventListener('submit', function (event) {
                 event.preventDefault();
@@ -275,6 +283,8 @@
 
                 const date = dateInput.value;
                 const doctor = doctorInput.value;
+
+            
 
                 //fetch get requests for all available appointments, available doctor, or available date
                 const getAvailability = async () => {
@@ -322,7 +332,6 @@
                 const requestedAppts = getAvailability().then(result => result)
             });
 
-
             function displayAppointments(appointments, listElement) {
                 listElement.innerHTML = '';
 
@@ -337,7 +346,7 @@
                         listItem.innerHTML = `Date: ${appointmentDate.toLocaleDateString()}, Time: ${appointmentTime}, Doctor: ${appointmentDoctor}, Specialty: ${appointment.specialty}&emsp;
                 <button class="schedule-appointment">Schedule</button>`;
 
-                        //fetch request by patch method to update Appointment database to Active once scheduled
+                        //fetch request by patch method to update Appointment, Patient database once scheduled
                         const scheduleBtn = listItem.querySelector('.schedule-appointment');
                         scheduleBtn.addEventListener('click', function () {
                             fetch(`/appointments/schedule/${appointment.id}`, {
@@ -384,6 +393,7 @@
                 scheduledAppointmentsList.appendChild(appointmentItem);
 
                 const cancelBtn = appointmentItem.querySelector('.cancel-appointment');
+        
                 cancelBtn.addEventListener('click', function () {
                     const confirmation = confirm('Please confirm to cancel the appointment');
                     if (confirmation) {
@@ -406,8 +416,7 @@
 
                 const rescheduleBtn = appointmentItem.querySelector('.reschedule-appointment');
                 rescheduleBtn.addEventListener('click', async function () {
-
-                    //the reschedule button assumes that the patient wants to schedule with the same doctor
+                    //the reschedule button assumes that the patient wants to reschedule with the same doctor
                     fetch(`/appointments/cancel/${appointment.id}`, {
                             method: 'PATCH',
                             headers: {
@@ -418,9 +427,9 @@
                         removeAppointment(appointmentItem);
                         let data;
                         try {
-                            const response = await fetch(`/appointments.json?first_name=${appointmentDoctor}`)
+                            const response = await fetch(`appointments/appointments.json?first_name=${appointmentDoctor}`)
                             data = await response.json()
-
+                            console.log(response)
                         } catch (err) {
                             console.error(err)
                             throw err
@@ -432,16 +441,6 @@
                 availableAppointmentsList.innerHTML = '';
             }
 
-
-
-            function updateScheduledAppointmentDetails(appointmentItem, newAppointment) {
-                const { date, time, doctor } = newAppointment;
-
-                appointmentItem.innerHTML = `<strong>Doctor:</strong> ${doctor}, <strong>Date:</strong> ${date}, <strong>Time:</strong> ${time}
-    <button class="cancel-appointment">Cancel</button>
-    <button class="reschedule-appointment">Reschedule</button>
-    <button class="view-appointment">View</button>`;
-            }
 
             function removeAppointment(appointmentItem) {
                 scheduledAppointmentsList.removeChild(appointmentItem);

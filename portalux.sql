@@ -58,8 +58,13 @@ ALTER TABLE portalux.DoctorAvailability MODIFY COLUMN available_date DATETIME;
 
 SET FOREIGN_KEY_CHECKS=0;
 
-DELIMITER $$
 
+#ChatGPT assisted with creating this trigger.
+DELIMITER $$
+/*
+	This trigger updates the Appointment table when Doctors Availabilty is added. It is assumed the all
+    appointments are in 30 minute increments.
+*/
 CREATE TRIGGER PopulateAvail
 AFTER INSERT ON portalux.DoctorAvailability
 FOR EACH ROW
@@ -76,4 +81,89 @@ BEGIN
 	END WHILE;
 END;
 $$
+DELIMITER ;
+
+
+# ChatGPT assisted with creating procedure
+DELIMITER //
+/* 
+	This procedure is created to update the appointment table with the corresponding patient_id
+    while simutaneously updating the patient table with the appointment_id when scheduled.
+*/
+CREATE PROCEDURE ScheduleAppt (IN s_appt_id int, IN s_patient_id int)
+
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+		SHOW ERRORS;
+		ROLLBACK;
+	END;
+    
+    START TRANSACTION;
+    
+    #update appointment table
+    UPDATE Appointments
+	SET current_status = 'Active', patient_id = s_patient_id
+	WHERE id = s_appt_id;
+	
+    IF ROW_COUNT() = 0 THEN
+		ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error updating Appointment table when scheduling appointment';
+	END IF;
+    
+    #update patient table
+    UPDATE Patients
+	SET appointment_id = s_appt_id
+	WHERE id = s_patient_id;
+	
+    IF ROW_COUNT() = 0 THEN
+		ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error updating Patient table when scheduling appointment';
+	END IF;
+    
+    COMMIT;
+END //
+
+DELIMITER ;
+
+# ChatGPT assisted with creating procedure
+DELIMITER //
+/* 
+	This procedure is created to update the appointment table with the corresponding patient_id
+    while simutaneously updating the patient table with the appointment_id when cancelled.
+*/
+CREATE PROCEDURE CancelAppt (IN s_appt_id int, IN s_patient_id int)
+
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+		SHOW ERRORS;
+		ROLLBACK;
+	END;
+    
+    START TRANSACTION;
+    
+    #update appointment table
+    UPDATE Appointments
+	SET current_status = 'Free', patient_id = NULL
+	WHERE id = s_appt_id;
+	
+    IF ROW_COUNT() = 0 THEN
+		ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error updating Appointment table when scheduling appointment';
+	END IF;
+    
+    #update patient table
+    UPDATE Patients
+	SET appointment_id = NULL
+	WHERE id = s_patient_id;
+	
+    IF ROW_COUNT() = 0 THEN
+		ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error updating Patient table when scheduling appointment';
+	END IF;
+    
+    COMMIT;
+END //
+
 DELIMITER ;

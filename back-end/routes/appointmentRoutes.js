@@ -1,6 +1,7 @@
 import express from 'express'
 import { getDoctors } from '../Database Connection/queries/doctors.js'
 import { getAllAvailAppts, getAvailApptByDoc, getAvailApptByDate, getAvailApptsDateNDoc ,cancelAppt, scheduleAppt } from '../Database Connection/queries/appointments.js'
+import { getPatientAppts } from '../Database Connection/queries/patients.js'
 
 export const router = express.Router()
 
@@ -9,16 +10,17 @@ router.get('/', async (req, res) => {
     const doctors = await getDoctors()
     const allAvailAppts = await getAllAvailAppts()
     const user = req.session.user
+    const userAppts = await getPatientAppts(user.id)
     
     try {
-        res.render('appointment', { doctors, allAvailAppts, user })
+        res.render('Appointment', { doctors, allAvailAppts, user, userAppts })
     
     } catch (err) {
         res.status(500).json({ error: err.message})
     }    
 })
 
-//pass through JSON data for available doctor or available appointment
+//pass through JSON data for available doctor, available appointment, or both
 router.get('/appointments.json', async (req, res) => {
     const availDate = req.query.appointment_date
     const availDoctor = req.query.first_name
@@ -54,7 +56,7 @@ router.patch('/schedule/:id', async (req, res) => {
         const user = req.session.user
         const appointment = await scheduleAppt(id, user.id)
        
-        res.json({ appointment })
+        res.json({ appointment, user })
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
@@ -65,9 +67,10 @@ router.patch('/schedule/:id', async (req, res) => {
 router.patch('/cancel/:id', async (req, res) => {
     try {
         const id =  req.params.id
-        const appointment = await cancelAppt(id)
+        const user = req.session.user
+        const appointment = await cancelAppt(id, user.id)
         
-        res.json({ appointment })
+        res.json({ appointment, user })
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
