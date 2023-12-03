@@ -1,4 +1,4 @@
-import { pool } from '../mysql.js'
+import { pool } from '../../mysql.js'
 
 /*
     All of the queries needed to list doctors, get a specific doctor,

@@ -1,4 +1,4 @@
-import { pool } from '../mysql.js'
+import { pool } from '../../mysql.js'
 
 /*
     This is where all the mysql queries regarding patients will be stored.
