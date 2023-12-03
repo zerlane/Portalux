@@ -211,9 +211,9 @@
     <nav>
         <ul>
             <li><a href="/home" >Home</a></li>
-            <li><a href="/Appointment" class = "nav_link">Appointments</a></li>
-            <li><a href="/medicalHistory" >Medical Records</a></li>
-            <li><a href="/Prescription">Billing Process</a></li>
+            <li><a href="/appointments" class = "nav_link">Appointments</a></li>
+            <li><a href="/medicalhistory" >Medical Records</a></li>
+            <li><a href="/billing">Billing Process</a></li>
             <li><a href="/profile">Profile</a></li>
         </ul>
     </nav>
@@ -282,7 +282,7 @@
 
                     if (date && doctor) {
                         try {
-                            const response = await fetch(`/appointments.json?appointment_date=${date}&first_name=${doctor}`)
+                            const response = await fetch(`appointments/appointments.json?appointment_date=${date}&first_name=${doctor}`)
                             data = await response.json()
                         } catch (err) {
                             console.err(err)
@@ -290,7 +290,7 @@
                         }
                      } else if (doctor && doctor !== 'Any Doctor') {
                         try {
-                            const response = await fetch(`/appointments.json?first_name=${doctor}`)
+                            const response = await fetch(`appointments/appointments.json?first_name=${doctor}`)
                             data = await response.json()
 
                         } catch (err) {
@@ -299,7 +299,7 @@
                         }
                     } else if (date) {
                         try {
-                            const response = await fetch(`/appointments.json?appointment_date=${date}`)
+                            const response = await fetch(`appointments/appointments.json?appointment_date=${date}`)
                             data = await response.json()
                         } catch (err) {
                             console.error(err)
@@ -307,7 +307,7 @@
                         }
                     } else {
                         try {
-                            const response = await fetch(`/appointments.json?`)
+                            const response = await fetch(`appointments/appointments.json?`)
                             data = await response.json()
 
                         } catch (err) {
@@ -354,8 +354,6 @@
                     });
                 }
             }
-
-
 
             function scheduleAppointment(appointment) {
                 const appointmentDate = new Date(appointment.appointment_date);

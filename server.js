@@ -1,7 +1,7 @@
 //requires express library
 import express from 'express'
 import bodyParser from 'body-parser'
-import { router } from './back-end/routes/routes.js'
+import { router } from './back-end/routes/appointmentRoutes.js'
 import path from 'path'
 import bcrypt from 'bcrypt'
 import session from 'express-session'
@@ -26,10 +26,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke.')
 })
 
-//homepage
-router.use(bodyParser.json())
-app.use('/', router)
 
+router.use(bodyParser.json())
 
 app.use(express.static("front-end"))
 
@@ -51,55 +49,13 @@ app.use(express.static(location));
 //setting view engine
 app.set('view engine', 'ejs');
 
-//creating connection 
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     port: 3306,
-//     user: 'root',
-//     password: 'password',
-// });
-
-// //creating database and table
-// connection.connect(function (error) {
-//     if (error) {
-//         console.log(error);
-//     }
-//     else {
-//         console.log('Connection Successful.');
-//         connection.query('CREATE DATABASE IF NOT EXISTS bb_database', function (error, result) {
-//             if (error) {
-//                 console.log(error)
-//             }
-//             else {
-//                 console.log('Database created.')
-//             }
-
-//         })
-//     }
-
-//     //creating table
-//     var sql = "CREATE TABLE IF NOT EXISTS bb_database.patients (id INT AUTO_INCREMENT PRIMARY KEY, fname CHAR(75) NOT NULL, lname CHAR(75) NOT NULL, dob DATE NOT NULL, address TEXT(150) NOT NULL, email VARCHAR(75) NOT NULL, phone VARCHAR(10) NOT NULL, gender CHAR(6) NOT NULL, password VARCHAR(60) NOT NULL, imgpwd VARCHAR(60) NOT NULL)";
-//     connection.query(sql, function (error, result) {
-//         if (error) {
-//             console.log(error)
-//         }
-//         else {
-//             console.log("Table Created.");
-//         }
-//     });
-
-
-// });
-
 
 //-------------------------------------------------------------------------get requests------------------------------------------------------------------------
 
-
 //routes
-app.get('/welcome', (req, res) => {
-    res.render("welcome");
-});
-
+app.get('/', (req, res) => {
+    res.render('welcome')
+})
 app.get('/signuppage', (req, res) => {
     res.render("signuppage");
 });
@@ -108,17 +64,47 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-
 app.get('/profile', (req, res) => {
     // Retrieve the user data from the session
     const user = req.session.user;
 
     // Render the profile page with the retrieved user data
-    res.render('profile', { user: user });
+    res.render('profile', { user });
 });
 
+app.get('/welcome', (req, res) => {
+    res.redirect('/');
+});
 
+app.get('/home', (req, res) => {
+    const user = req.session.user;
+    
+    res.render('home', { user })
+})
 
+app.get('/medicalhistory', (req, res) => {
+    res.render('medicalHistory')
+})
+
+//implemented in the future
+app.get('/billing', (req, res) => {
+    res.redirect('/medicalHistory')
+})
+
+app.get('/prescriptions', (req, res) => {
+    res.render('Prescriptions')
+})
+
+app.use('/appointments', router)
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            throw err
+        }
+        res.redirect('/')
+    })
+})
 
 //-----------------------------------------------------------------------------------------post requests----------------------------------------------------------------------------------------
 
@@ -135,11 +121,14 @@ app.post('/signuppage', async (req, res) => {
         let password = req.body.password;
         let imgpwd = req.body.imgpwd;
 
-        if (emailExists(email)) {
+        const emailInDB = await emailExists(email)
+
+        if (emailInDB) {
             return res.render('signuppage', { msg: 'Email already exists', msg_type: 'error' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 8);
+        
         await insertPatient(fname, lname, dob, address, email, phone, gender, hashedPassword, imgpwd)
 
         res.redirect('/login')
@@ -162,14 +151,21 @@ app.post('/login', async (req, res) => {
         }
 
         let comparePW = await bcrypt.compare(password, result[0].password)
-        let compareImgPwd = await bcrypt.compare(imgpwd, result[0].imgpwd)
-        console.log(compareImgPwd) 
 
         if(!comparePW) {
             return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' });
         } else {
             req.session.user = result[0]
-            res.redirect('/profile')
+
+            req.session.save((err) => {
+                if(err) {
+                    throw err
+                }
+                
+                res.redirect('/profile')
+
+            })
+            
         }
 
 
@@ -177,39 +173,6 @@ app.post('/login', async (req, res) => {
         console.error
     }
 })
-// app.post('/login',  (req, res) =>{
-//     //retrieving data
-//     let email = req.body.email;
-//     let pw = req.body.password;
-//     let imgpwd = req.body.imgpwd
-
-//     //selecting all data from databse
-//     pool.query('SELECT * FROM Patients WHERE email=?', [email], async (error, result) => {
-//         if(error){
-//             console.log(error);
-//         }
-//         console.log(result);
-//         //checking if user exists
-//         if (result.length === 0) {
-//             //displaying error message if user is not found in database
-//             return res.render('login', { msg: 'User does not exist.', msg_type: 'error' }  );
-//         }
-//         else{
-//             //cheching if given requested password matches the hashed password stored in database
-//             //redirects to profile page if password match
-//             let comparePW = await bcrypt.compare(pw, result[0])
-//             let compareImgPwd = await bcrypt.compare(imgpwd, result[0].imgpwd)
-//             if(!(comparePW && compareImgPwd)){
-//                 return res.render('login', { msg2: 'Password is incorrect', msg_type: 'error' }  );
-//             }
-//             else{
-//                 req.session.user = result[0];
-//                 res.redirect('/profile');
-//             }
-//         }
-
-//     });
-// });
 
 
 // Set the port for the server to listen on

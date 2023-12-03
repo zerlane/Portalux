@@ -4,16 +4,14 @@ import { getAllAvailAppts, getAvailApptByDoc, getAvailApptByDate, getAvailApptsD
 
 export const router = express.Router()
 
-router.get('/', async (req, res) => {
-    res.render('welcome')
-})
-
-router.get('/appointments', async (req, res) => {   
+//get request for the appointment page
+router.get('/', async (req, res) => {   
     const doctors = await getDoctors()
     const allAvailAppts = await getAllAvailAppts()
+    const user = req.session.user
     
     try {
-        res.render('appointment', { doctors, allAvailAppts })
+        res.render('appointment', { doctors, allAvailAppts, user })
     
     } catch (err) {
         res.status(500).json({ error: err.message})
@@ -49,10 +47,13 @@ router.get('/appointments.json', async (req, res) => {
     }
 })
 
-router.patch('/appointments/schedule/:id', async (req, res) => {
+//patch request to schedule the appointment
+router.patch('/schedule/:id', async (req, res) => {
     try {
         const id = req.params.id
-        const appointment = await scheduleAppt(id)
+        const user = req.session.user
+        const appointment = await scheduleAppt(id, user.id)
+       
         res.json({ appointment })
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -60,7 +61,8 @@ router.patch('/appointments/schedule/:id', async (req, res) => {
 
 })
 
-router.patch('/appointments/cancel/:id', async (req, res) => {
+//patch request to cancel the appointment
+router.patch('/cancel/:id', async (req, res) => {
     try {
         const id =  req.params.id
         const appointment = await cancelAppt(id)

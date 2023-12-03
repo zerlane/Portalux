@@ -21,14 +21,13 @@
        
        
     <div class = "navContainer" >
-        
         <nav>
             <ul>
                 <!-- <li><img src = "../STATIC/portaLuxBunnyLogo.png"alt = "logoImg" class = "logoImg" width = "90"></li> -->
 
                 <li><a href="/home"  class = "home_link">Home</a></li>
                 <form action="/appointments" method="POST">
-                <li><a href="/appointment">Appointments</a></li>
+                <li><a href="/appointments">Appointments</a></li>
                 </form>
                 <form action="/medicalHistory" method="POST">
                 <li><a href="/medicalHistory" class = "nav_link" data-link>Medical Records</a></li>
@@ -62,12 +61,12 @@
             </div>
             <div class="grid-container2">
                 <div   id = "welcomeSign">
-                    <h2>Welcome!</h2>
+                    <h2>Welcome <%= user.first_name %>!</h2>
                     <p> See What's New </p>
 
                 </div>
 
-                <div class = "grid-item-2" onclick= "location.href= '/Appointment';">
+                <div class = "grid-item-2" onclick= "location.href= '/appointments';">
                     <p> Schedule Your Annual Appointment!</p>
                 </div>
 

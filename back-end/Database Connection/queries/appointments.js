@@ -87,36 +87,36 @@ export const getAvailApptsDateNDoc = async (availDate, doctor) => {
 }
 
 //schedule appointment
-export const scheduleAppt = async (id) => {
+export const scheduleAppt = async (appt_id, patient_id) => {
     try {
         const [appointment] = await pool.query(
             `UPDATE Appointments
-                SET current_status = 'Active'
+                SET current_status = 'Active', patient_id = ?
                 WHERE current_status = 'Free'
                     AND id = ?
-                `, [id]
+                `, [patient_id, appt_id]
         )
         
         if (appointment.affectedRows > 0) {
             const [scheduledAppt] = await pool.query(
-                `SELECT * FROM Appointments WHERE id = ?`, [id]
+                `SELECT * FROM Appointments WHERE id = ?`, [appt_id]
             )
             return scheduledAppt[0]
         }
     } catch (err) {
-        console.error(`Couldn't cancel the appointment: ${err}`)
+        console.error(`Couldn't schedule the appointment: ${err}`)
         throw err
     }
     
 }
-// console.log(await scheduleAppt(1))
+
 
 //cancelled appointment 
 export const cancelAppt = async (id) => {
     try {
         const [appointment] = await pool.query(
             `UPDATE Appointments
-                SET current_status = 'Free'
+                SET current_status = 'Free', patient_id = null
                 WHERE current_status = 'Active'
                     AND id = ?
                 `, [id]

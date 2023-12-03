@@ -6,9 +6,7 @@ import { pool } from '../mysql.js'
 
 export const insertPatient = async (fName, lName, dob, address, email, phone, gender, password, imgpwd) => {
     try {
-        //check if email exists in the database already
-        
-
+           
             const [patient] = await pool.query(
                 `INSERT INTO Patients (first_name, last_name, dob, address, email, phone, gender, password, imgpwd) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
                     [fName, lName, dob, address, email, phone, gender, password, imgpwd]
@@ -21,6 +19,7 @@ export const insertPatient = async (fName, lName, dob, address, email, phone, ge
         throw err
     }
 }
+
 
 export const emailExists = async (email) => {
     try {
