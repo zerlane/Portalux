@@ -1,7 +1,7 @@
 import express from 'express'
-import { getDoctors } from '../Database Connection/queries/doctors.js'
-import { getAllAvailAppts, getAvailApptByDoc, getAvailApptByDate, getAvailApptsDateNDoc ,cancelAppt, scheduleAppt } from '../Database Connection/queries/appointments.js'
-import { getPatientAppts } from '../Database Connection/queries/patients.js'
+import { getDoctors } from '../queries/doctors.js'
+import { getAllAvailAppts, getAvailApptByDoc, getAvailApptByDate, getAvailApptsDateNDoc ,cancelAppt, scheduleAppt } from '../queries/appointments.js'
+import { getPatientAppts } from '../queries/patients.js'
 
 export const router = express.Router()
 

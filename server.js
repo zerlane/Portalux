@@ -6,9 +6,7 @@ import path from 'path'
 import bcrypt from 'bcrypt'
 import session from 'express-session'
 import { fileURLToPath } from 'url'
-import mysql from 'mysql'
-import { pool } from './back-end/mysql.js'
-import { insertPatient, emailExists, getOnePatient } from './back-end/Database Connection/queries/patients.js'
+import { insertPatient, emailExists, getOnePatient } from './back-end/queries/patients.js'
 
 
 //creates new express app
