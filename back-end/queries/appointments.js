@@ -1,7 +1,8 @@
 import { pool } from '../mysql.js'
 
 /*
-    This is where all the mysql queries regarding appointments will be stored.
+    This is where all the mysql queries regarding appointments will be stored to dynamically fetch
+    MySQL data.
 */
 
 //get all available appointments
@@ -21,7 +22,7 @@ export const getAllAvailAppts = async () => {
     }
 }
 
-//search available appointment by doctor
+//get available appointment by doctor
 export const getAvailApptByDoc = async (doctor) => {
 
     try {
@@ -44,7 +45,7 @@ export const getAvailApptByDoc = async (doctor) => {
     }
 }
 
-//search available appointment by date
+//get available appointment by date
 export const getAvailApptByDate = async (availDate) => {
     try {
         const [appointments] = await pool.query(
@@ -86,7 +87,7 @@ export const getAvailApptsDateNDoc = async (availDate, doctor) => {
     }
 }
 
-//schedule appt - call ScheduleAppt stored procedure
+//schedule appt - call ScheduleAppt stored procedure in stored procedure
 export const scheduleAppt = async (appt_id, patient_id) => {
     try {
         const scheduleApptQuery = await pool.query(`CALL ScheduleAppt(?, ?)`, [appt_id, patient_id])
@@ -98,7 +99,7 @@ export const scheduleAppt = async (appt_id, patient_id) => {
     }
 }
 
-//cancelled appointment 
+//cancelled appointment -  call CancelAppt stored procedure in stored procedure
 export const cancelAppt = async (appt_id, patient_id) => {
     try {
         const cancelApptQuery = await pool.query(`CALL CancelAppt(?, ?)`, [appt_id, patient_id])

@@ -1,7 +1,8 @@
 import { pool } from '../mysql.js'
 
 /*
-    This is where all the mysql queries regarding patients will be stored.
+    This is where all the mysql queries regarding patients will be stored to dynamically fetch
+    MySQL data.
 */
 
 export const insertPatient = async (fName, lName, dob, address, email, phone, gender, password, imgpwd) => {

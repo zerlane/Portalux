@@ -5,7 +5,7 @@ import { getPatientAppts } from '../queries/patients.js'
 
 export const router = express.Router()
 
-//get request for the appointment page
+//GET request for the appointment page to load all doctors, available appointments, patient, and patient's appointment
 router.get('/', async (req, res) => {   
     const doctors = await getDoctors()
     const allAvailAppts = await getAllAvailAppts()
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
     }    
 })
 
-//pass through JSON data for available doctor, available appointment, or both
+//GET request to pass through JSON data for available doctor, available appointment, or both 
 router.get('/appointments.json', async (req, res) => {
     const availDate = req.query.appointment_date
     const availDoctor = req.query.first_name
@@ -49,7 +49,7 @@ router.get('/appointments.json', async (req, res) => {
     }
 })
 
-//patch request to schedule the appointment
+//patch request to schedule the appointment in regards to appointment id
 router.patch('/schedule/:id', async (req, res) => {
     try {
         const id = req.params.id
@@ -63,7 +63,7 @@ router.patch('/schedule/:id', async (req, res) => {
 
 })
 
-//patch request to cancel the appointment
+//patch request to cancel the appointment in regards to appointment id
 router.patch('/cancel/:id', async (req, res) => {
     try {
         const id =  req.params.id

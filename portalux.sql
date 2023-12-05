@@ -62,7 +62,7 @@ SET FOREIGN_KEY_CHECKS=0;
 #ChatGPT assisted with creating this trigger.
 DELIMITER $$
 /*
-	This trigger updates the Appointment table when Doctors Availabilty is added. It is assumed the all
+	This trigger updates the Appointment table when the doctor's availability is added to the doctor's availabilty. It is assumed the all
     appointments are in 30 minute increments.
 */
 CREATE TRIGGER PopulateAvail

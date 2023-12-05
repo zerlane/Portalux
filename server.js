@@ -62,6 +62,7 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+//This get requests comes before the following get requests to pass along the current logged on user.
 app.get('/profile', (req, res) => {
     // Retrieve the user data from the session
     const user = req.session.user;
