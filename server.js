@@ -186,4 +186,4 @@ app.listen(port, () => {
 
 
 //https://www.tutorjoes.in/blog/node_js#google_vignette
-//chatgpt
+//chatgpt: used to learn syntax for ejs on how to embed js code into our html forms 
